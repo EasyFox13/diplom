@@ -1,0 +1,50 @@
+<mxfile host="Electron">
+  <diagram name="DFD_Architecture" id="KnoLRj9SkAlVaCOtUYT2">
+    <mxGraphModel dx="924" dy="427" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cU3alxNz1bPZeCUWpqst-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Пользователь / Артист" vertex="1">
+          <mxGeometry height="60" width="30" x="90" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Блок сбора данных" vertex="1">
+          <mxGeometry height="80" width="120" x="210" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Блок обработки" vertex="1">
+          <mxGeometry height="80" width="120" x="390" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-4" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="СУБД (Метаданные)" vertex="1">
+          <mxGeometry height="100" width="80" x="610" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-5" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="S3 Хранилище (Контент)" vertex="1">
+          <mxGeometry height="100" width="80" x="610" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Блок выдачи" vertex="1">
+          <mxGeometry height="80" width="120" x="390" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-7" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-1" target="cU3alxNz1bPZeCUWpqst-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-8" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-2" target="cU3alxNz1bPZeCUWpqst-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-9" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-3" target="cU3alxNz1bPZeCUWpqst-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-10" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-3" target="cU3alxNz1bPZeCUWpqst-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-11" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-3" target="cU3alxNz1bPZeCUWpqst-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cU3alxNz1bPZeCUWpqst-12" edge="1" parent="1" source="cU3alxNz1bPZeCUWpqst-6" target="cU3alxNz1bPZeCUWpqst-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="105" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
