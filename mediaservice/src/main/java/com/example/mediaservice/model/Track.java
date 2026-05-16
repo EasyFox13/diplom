@@ -40,4 +40,8 @@ public class Track {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    public Integer getTrackId() {
+        return trackId;
+    }
 }
