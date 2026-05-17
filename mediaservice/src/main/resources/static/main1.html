@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Service - Панель управления</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .grid-layout {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2 { border-bottom: 1px solid #333; padding-bottom: 10px; color: #1DB954; margin-top: 0; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        label { margin-bottom: 5px; font-size: 14px; color: #aaa; }
+        input[type="text"], input[type="file"], input[type="number"] {
+            padding: 10px; background: #282828; border: 1px solid #404040;
+            color: white; border-radius: 5px; outline: none;
+        }
+        button {
+            background-color: #1DB954; color: white; border: none; padding: 12px;
+            font-weight: bold; border-radius: 25px; cursor: pointer; transition: 0.2s;
+        }
+        button:hover { background-color: #1ed760; scale: 1.02; }
+
+        .track-item, .album-card-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #282828; margin-bottom: 8px;
+            border-radius: 5px; cursor: pointer; transition: 0.2s;
+        }
+        .track-item:hover, .album-card-item:hover { background: #383838; }
+
+        /* Стили для карточки альбома */
+        .album-view {
+            display: flex; gap: 20px; background: #282828; padding: 15px; border-radius: 8px; margin-top: 10px;
+        }
+        .album-cover {
+            width: 120px; height: 120px; background: #404040; border-radius: 5px; object-fit: cover;
+        }
+        .album-info { display: flex; flex-direction: column; justify-content: center; }
+
+        .player-container {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #282828; padding: 20px; display: flex;
+            flex-direction: column; align-items: center; border-top: 1px solid #404040;
+            z-index: 100;
+        }
+        audio { width: 100%; max-width: 600px; }
+        #current-title { margin-bottom: 10px; font-weight: bold; color: #1DB954; }
+    </style>
+</head>
+<body>
+
+<div class="grid-layout">
+    <div class="column">
+        <div class="container">
+            <h2>Создать новый альбом</h2>
+            <form id="albumForm">
+                <div class="form-group">
+                    <label>Название альбома</label>
+                    <input type="text" id="albumTitleInput" required placeholder="Например: Legendary Beats">
+                </div>
+                <div class="form-group">
+                    <label>Ссылка на обложку (URL)</label>
+                    <input type="text" id="albumCoverInput" placeholder="http://example.com/cover.jpg">
+                </div>
+                <div class="form-group">
+                    <label>ID Исполнителя (Artist ID)</label>
+                    <input type="number" id="albumArtistIdInput" required placeholder="1">
+                </div>
+                <button type="submit" style="width: 100%;">Создать альбом</button>
+            </form>
+        </div>
+
+        <div class="container">
+            <h2>Загрузить новый трек</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Название трека</label>
+                    <input type="text" id="titleInput" required placeholder="Например: Серега Пират - Кавер">
+                </div>
+                <div class="form-group">
+                    <label>ID Альбома (Album ID)</label>
+                    <input type="number" id="albumIdInput" required placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Аудиофайл (.mp3)</label>
+                    <input type="file" id="fileInput" accept="audio/mpeg" required>
+                </div>
+                <button type="submit" style="width: 100%;">Загрузить в медиатеку</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="container">
+            <h2>Карточка альбома (Интерактив)</h2>
+            <div class="form-group" style="flex-direction: row; gap: 10px;">
+                <input type="number" id="searchAlbumId" placeholder="Введите ID Альбома" style="flex: 1;">
+                <button onclick="loadAlbumCard()">Открыть</button>
+            </div>
+            <div id="albumCardDetails" style="display: none;">
+                <div class="album-view">
+                    <img id="viewAlbumCover" class="album-cover" src="" alt="Обложка">
+                    <div class="album-info">
+                        <h3 id="viewAlbumTitle" style="margin: 0 0 10px 0; color: #fff;"></h3>
+                        <span id="viewAlbumIdText" style="color: #888; font-size: 13px;"></span>
+                    </div>
+                </div>
+                <h4 style="margin: 15px 0 10px 0; color: #1DB954;">Треклист альбома:</h4>
+                <div id="albumTracksList"></div>
+            </div>
+            <div id="albumCardPlaceholder" style="color: #666; text-align: center; padding: 20px;">
+                Введите ID альбома выше, чтобы загрузить его треклист
+            </div>
+        </div>
+
+        <div class="container" style="margin-bottom: 120px;">
+            <h2>Вся Медиатека (Последние треки)</h2>
+            <div id="tracksList"></div>
+        </div>
+    </div>
+</div>
+
+<div class="player-container">
+    <div id="current-title">Плеер пуст</div>
+    <audio id="audioPlayer" controls></audio>
+</div>
+
+<script>
+    const TRACKS_API = "http://localhost:8080/api/tracks";
+    const ALBUMS_API = "http://localhost:8080/api/albums";
+
+    // 1. ЗАГРУЗКА ОБЩЕГО СПИСКА ТРЕКОВ
+    async function loadTracks() {
+        try {
+            const response = await fetch(TRACKS_API);
+            const data = await response.json();
+            const tracksList = document.getElementById("tracksList");
+            tracksList.innerHTML = "";
+
+            data.content.forEach(track => {
+                const item = document.createElement("div");
+                item.className = "track-item";
+                item.innerHTML = `
+                    <div>
+                        <strong>${track.title}</strong>
+                        <div style="font-size: 12px; color: #888;">ID: ${track.trackId} | BPM: ${track.bpm} | Длительность: ${track.duration} сек</div>
+                    </div>
+                    <span style="color: #1DB954; font-size: 20px;">▶</span>
+                `;
+                item.onclick = () => playTrack(track.trackId, track.title);
+                tracksList.appendChild(item);
+            });
+        } catch (error) {
+            console.error("Ошибка при загрузке треков:", error);
+        }
+    }
+
+    // 2. ВОСПРОИЗВЕДЕНИЕ ТРЕКА
+    function playTrack(id, title) {
+        const player = document.getElementById("audioPlayer");
+        document.getElementById("current-title").innerText = "Сейчас играет: " + title;
+        player.src = `${TRACKS_API}/${id}/stream`;
+        player.play();
+    }
+
+    // 3. ОТПРАВКА ФОРМЫ ЗАГРУЗКИ ТРЕКА
+    document.getElementById("uploadForm").onsubmit = async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById("titleInput").value;
+        const albumId = parseInt(document.getElementById("albumIdInput").value, 10);
+        const fileFile = document.getElementById("fileInput").files[0];
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("albumId", albumId);
+        formData.append("file", fileFile);
+
+        try {
+            const response = await fetch(`${TRACKS_API}/upload`, {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Трек успешно загружен!");
+                document.getElementById("uploadForm").reset();
+                loadTracks();
+                // Если сейчас открыт этот же альбом, обновим его карточку
+                const currentSearchedId = document.getElementById("searchAlbumId").value;
+                if (currentSearchedId == albumId) loadAlbumCard();
+            } else {
+                alert(`Ошибка бэкенда: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ошибка сети.");
+        }
+    };
+
+    // 4. ОТПРАВКА ФОРМЫ СОЗДАНИЯ АЛЬБОМА
+    document.getElementById("albumForm").onsubmit = async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById("albumTitleInput").value;
+        const coverUrl = document.getElementById("albumCoverInput").value;
+        const artistId = parseInt(document.getElementById("albumArtistIdInput").value, 10);
+
+        const albumData = {
+            title: title,
+            coverUrl: coverUrl
+        };
+
+        try {
+            // Шлём POST запрос с телом JSON и параметром artistId в URL
+            const response = await fetch(`${ALBUMS_API}?artistId=${artistId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(albumData)
+            });
+
+            if (response.ok) {
+                const createdAlbum = await response.json();
+                alert(`Альбом успешно создан! Присвоен ID: ${createdAlbum.albumId}`);
+                document.getElementById("albumForm").reset();
+                // Подставляем этот ID сразу в форму поиска и загрузки для удобства
+                document.getElementById("searchAlbumId").value = createdAlbum.albumId;
+                document.getElementById("albumIdInput").value = createdAlbum.albumId;
+                loadAlbumCard();
+            } else {
+                alert(`Ошибка создания альбома. Статус: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ошибка сети при создании альбома.");
+        }
+    };
+
+    // 5. ИНТЕРАКТИВНАЯ ЗАГРУЗКА КАРТОЧКИ АЛЬБОМА
+    async function loadAlbumCard() {
+        const id = document.getElementById("searchAlbumId").value;
+        if (!id) {
+            alert("Введите ID альбома!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${ALBUMS_API}/${id}`);
+            if (!response.ok) {
+                alert("Альбом не найден в базе данных.");
+                document.getElementById("albumCardDetails").style.display = "none";
+                document.getElementById("albumCardPlaceholder").style.display = "block";
+                return;
+            }
+
+            const album = await response.json();
+
+            // Показываем контейнер инфы
+            document.getElementById("albumCardPlaceholder").style.display = "none";
+            document.getElementById("albumCardDetails").style.display = "block";
+
+            // Заполняем данные карточки
+            document.getElementById("viewAlbumTitle").innerText = album.title;
+            document.getElementById("viewAlbumIdText").innerText = `Album ID: ${album.albumId}`;
+            document.getElementById("viewAlbumCover").src = album.coverUrl || "https://via.placeholder.com/120?text=No+Cover";
+
+            // Рендерим треклист альбома
+            const tracksContainer = document.getElementById("albumTracksList");
+            tracksContainer.innerHTML = "";
+
+            if (!album.tracks || album.tracks.length === 0) {
+                tracksContainer.innerHTML = `<div style="color: #666; font-style: italic; font-size: 14px;">В этом альбоме ещё нет треков</div>`;
+            } else {
+                album.tracks.forEach(track => {
+                    const tItem = document.createElement("div");
+                    tItem.className = "track-item";
+                    tItem.innerHTML = `
+                        <div>
+                            <span>${track.title}</span>
+                            <div style="font-size: 11px; color: #666;">BPM: ${track.bpm} | Длительность: ${track.duration}с</div>
+                        </div>
+                        <span style="color: #1DB954;">▶</span>
+                    `;
+                    tItem.onclick = () => playTrack(track.trackId, track.title);
+                    tracksContainer.appendChild(tItem);
+                });
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Ошибка при получении карточки альбома.");
+        }
+    }
+
+    // Инициализация страницы
+    loadTracks();
+</script>
+</body>
+</html>

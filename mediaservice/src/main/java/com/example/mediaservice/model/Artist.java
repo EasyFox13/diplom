@@ -1,5 +1,6 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -26,5 +27,6 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonManagedReference
     private List<Album> albums;
 }

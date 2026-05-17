@@ -1,5 +1,6 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -17,7 +18,8 @@ public class Album {
     private Integer albumId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artist_id", nullable = false)
+    @JoinColumn(name = "artist_id")
+    @JsonBackReference
     private Artist artist;
 
     @Column(nullable = false, length = 255)

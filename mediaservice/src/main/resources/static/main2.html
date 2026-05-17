@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player - Home</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --bg-main: #202020;
+            --bg-dark: #121212;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --spotify-green: #1ed760;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 1. ВЕРХНЯЯ ПАНЕЛЬ */
+        .app-header {
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+        .logo-circle {
+            width: 32px; height: 32px;
+            background-color: #ffffff; border-radius: 50%;
+            cursor: pointer;
+        }
+        .header-center {
+            display: flex; align-items: center;
+            background-color: #2a2a2a; border-radius: 20px;
+            padding: 6px 16px; width: 400px;
+        }
+        .header-center input {
+            background: transparent; border: none; color: white;
+            outline: none; width: 100%; font-size: 14px; margin-left: 10px;
+        }
+        .profile-icon {
+            width: 36px; height: 36px; border: 2px solid var(--text-muted);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; font-size: 20px;
+        }
+
+        /* 2. ОСНОВНОЙ БЛОК */
+        .main-layout {
+            display: flex; flex: 1; padding: 0 16px 16px 16px; gap: 16px;
+            height: calc(100vh - 64px - 90px); box-sizing: border-box;
+        }
+        .smooth-box {
+            background-color: var(--bg-dark); border-radius: 35px;
+            padding: 24px; box-sizing: border-box; overflow-y: auto;
+        }
+        .sidebar { width: 300px; min-width: 250px; }
+        .sidebar h3 { margin-top: 0; color: var(--text-muted); font-size: 15px; font-weight: normal; }
+        .content-area { flex: 1; }
+        .content-area h2 { margin-top: 0; font-size: 22px; color: var(--text-muted); font-weight: normal; }
+
+        .album-link {
+            padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: #ccc;
+        }
+        .album-link:hover { background-color: #222; color: #fff; }
+
+        .recommendations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .rec-card { background-color: #1a1a1a; padding: 16px; border-radius: 16px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .rec-card:hover { background-color: #252525; }
+        .rec-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; margin-bottom: 10px; }
+        .rec-card .title { font-weight: bold; font-size: 14px; }
+
+        /* 3. КАСТОМНЫЙ НИЖНИЙ ПЛЕЕР */
+        /* НИЖНИЙ ПЛЕЕР — теперь распределяет три блока равномерно */
+.bottom-player {
+    height: 150px;
+    background-color: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Распределяет лево, центр и право */
+    padding: 0 24px;
+    box-sizing: border-box;
+    border-top: 1px solid #252525;
+}
+
+/* Левая часть: обложка и текст (занимает 30% ширины) */
+.player-track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 30%;
+}
+
+/* ЦЕНТРАЛЬНАЯ ЧАСТЬ: кнопки и таймлайн (занимает 40% ровно по центру) */
+.player-controls-container {
+    display: flex;
+    flex-direction: column; /* Элементы встанут друг под другом: сначала кнопки, потом полоса */
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    gap: 8px; /* Расстояние между кнопками и ползунком */
+}
+
+/* ПРАВАЯ ЧАСТЬ: только громкость (занимает 30% и прижата к правому краю) */
+.player-right-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 30%;
+}
+
+/* Кнопки теперь не разлетаются, у них фиксированный зазор */
+.playback-buttons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 22px;
+}
+.playback-buttons span {
+    cursor: pointer;
+    user-select: none;
+    transition: 0.1s;
+    display: inline-block;
+}
+.playback-buttons span:hover {
+    color: var(--spotify-green);
+}
+#globalPlayBtn {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Стилизация ползунков */
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: monospace;
+    width: 100%;
+    justify-content: center; /* Центрирует таймлайн внутри своих 40% */
+}
+
+#timelineSlider {
+    width: 100%; /* Заполнит всю выделенную под slider-wrapper ширину */
+    max-width: 400px; /* Чтобы полоса не была слишком огромной на широких мониторах */
+}
+#volumeSlider {
+    width: 100px;
+}
+        .player-track-info { display: flex; align-items: center; gap: 12px; width: 25%; }
+        .cover-placeholder { width: 52px; height: 52px; background-color: #333; border: 2px solid white; object-fit: cover; }
+        .meta { display: flex; flex-direction: column; font-family: monospace; }
+        .meta .t-title { font-size: 14px; font-weight: bold; }
+        .meta .t-artist { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .player-controls-container {
+            display: flex; align-items: center; justify-content: flex-end; flex: 1; gap: 24px;
+        }
+
+        .playback-buttons { display: flex; align-items: center; gap: 24px; font-size: 22px; }
+        .playback-buttons span { cursor: pointer; user-select: none; transition: 0.1s; width: 24px; text-align: center; }
+        .playback-buttons span:hover { color: var(--spotify-green); }
+        #globalPlayBtn { font-size: 28px; }
+
+        /* Стилизация ползунков (Timeline и Громкость) */
+        .slider-wrapper { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); font-family: monospace; }
+
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none; background: #404040;
+            height: 4px; border-radius: 2px; outline: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 10px; height: 10px;
+            border-radius: 50%; background: white; transition: 0.1s;
+        }
+        input[type="range"]:hover::-webkit-slider-thumb { background: var(--spotify-green); scale: 1.2; }
+
+        #timelineSlider { width: 300px; }
+        #volumeSlider { width: 100px; }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-left"><div class="logo-circle" onclick="location.reload()"></div></div>
+    <div class="header-center"><span>🔍</span><input type="text" placeholder="Что хочешь включить?"></div>
+    <div class="header-right"><div class="profile-icon">👤</div></div>
+</header>
+
+<main class="main-layout">
+    <div class="sidebar smooth-box">
+        <h3>все плейлисты и сохраненные альбомы пользователя</h3>
+        <div id="sidebarAlbumsList"><div style="color: #444; font-size: 13px;">Загрузка...</div></div>
+    </div>
+
+    <div class="content-area smooth-box">
+        <h2>всякие рекомендации</h2>
+        <div class="recommendations-grid" id="recGrid"></div>
+    </div>
+</main>
+
+<audio id="audioPlayer" style="display: none;"></audio>
+
+<footer class="bottom-player">
+    <div class="player-track-info">
+        <img class="cover-placeholder" id="pCover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><rect width='52' height='52' fill='%23333'/></svg>">
+        <div class="meta">
+            <span class="t-title" id="pTitle">title</span>
+            <span class="t-artist" id="pArtist">artist</span>
+        </div>
+    </div>
+
+    <div class="player-controls-container">
+        <div class="playback-buttons">
+            <span id="prevBtn">&lt;</span>
+            <span id="globalPlayBtn">▷</span>
+            <span id="nextBtn">&gt;</span>
+        </div>
+
+        <div class="slider-wrapper">
+            <span id="currentTimeText">0:00</span>
+            <input type="range" id="timelineSlider" min="0" value="0" step="1">
+            <span id="durationTimeText">0:00</span>
+        </div>
+    </div>
+
+    <div class="player-right-container">
+        <div class="slider-wrapper" style="justify-content: flex-end;">
+            <span>🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="1" value="0.7" step="0.01">
+        </div>
+    </div>
+</footer>
+
+<script>
+    const TRACKS_API = "http://localhost:8080/api/tracks";
+    const ALBUMS_API = "http://localhost:8080/api/albums";
+
+    const audio = document.getElementById("audioPlayer");
+    const playBtn = document.getElementById("globalPlayBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const timeline = document.getElementById("timelineSlider");
+    const volume = document.getElementById("volumeSlider");
+
+    const currentTimeText = document.getElementById("currentTimeText");
+    const durationTimeText = document.getElementById("durationTimeText");
+
+    let currentAlbumTracks = [];
+    let currentTrackIndex = -1;
+    let currentAlbumTitle = "";
+    let currentAlbumCover = "";
+
+    // 1. ИНИЦИАЛИЗАЦИЯ И ЗАГРУЗКА
+    async function initApp() {
+        try {
+            const albumIds = [1, 2, 3];
+            const albums = [];
+            for(let id of albumIds) {
+                const res = await fetch(`${ALBUMS_API}/${id}`);
+                if(res.ok) albums.push(await res.json());
+            }
+            renderSidebar(albums);
+            renderRecommendations(albums);
+        } catch (e) { console.error(e); }
+    }
+
+    function renderSidebar(albums) {
+        const container = document.getElementById("sidebarAlbumsList");
+        container.innerHTML = "";
+        albums.forEach(album => {
+            const item = document.createElement("div");
+            item.className = "album-link";
+            item.innerText = album.title;
+            item.onclick = () => loadAndPlayAlbum(album, 0);
+            container.appendChild(item);
+        });
+    }
+
+    function renderRecommendations(albums) {
+        const container = document.getElementById("recGrid");
+        container.innerHTML = "";
+        albums.forEach(album => {
+            const card = document.createElement("div");
+            card.className = "rec-card";
+            card.innerHTML = `
+                <img src="${album.coverUrl || 'https://via.placeholder.com/150?text=No+Cover'}" alt="Cover">
+                <div class="title">${album.title}</div>
+            `;
+            card.onclick = () => loadAndPlayAlbum(album, 0);
+            container.appendChild(card);
+        });
+    }
+
+    // 2. СТРИМИНГ И ЗАПУСК
+    function loadAndPlayAlbum(album, trackIndex) {
+        if(!album.tracks || album.tracks.length === 0) {
+            alert(`В альбоме "${album.title}" нет треков.`);
+            return;
+        }
+        currentAlbumTracks = album.tracks;
+        currentTrackIndex = trackIndex;
+        currentAlbumTitle = album.title;
+        currentAlbumCover = album.coverUrl;
+
+        playCurrentTrack();
+    }
+
+    function playCurrentTrack() {
+        const track = currentAlbumTracks[currentTrackIndex];
+
+        document.getElementById("pTitle").innerText = track.title;
+        document.getElementById("pArtist").innerText = currentAlbumTitle;
+        if(currentAlbumCover) document.getElementById("pCover").src = currentAlbumCover;
+
+        audio.src = `${TRACKS_API}/${track.trackId}/stream`;
+        audio.play();
+    }
+
+    // Вспомогательная функция для форматирования времени (сек -> мм:сс)
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // 3. ЛОГИКА КАСТОМНОГО ПЛЕЕРА И КНОПОК
+
+    // Кнопка Play / Pause (по центру)
+    playBtn.onclick = () => {
+        if (!audio.src) return; // Если ничего не загружено, игнорим
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
+
+    // Переключение состояний иконок (▷ и ||)
+    audio.onplay = () => playBtn.innerText = "||";
+    audio.onpause = () => playBtn.innerText = "▷";
+
+    // Кнопка Следующий трек (>)
+    nextBtn.onclick = () => {
+        if (currentAlbumTracks.length === 0) return;
+        currentTrackIndex = (currentTrackIndex + 1) % currentAlbumTracks.length;
+        playCurrentTrack();
+    };
+
+    // Кнопка Предыдущий трек (<)
+    prevBtn.onclick = () => {
+        if (currentAlbumTracks.length === 0) return;
+        currentTrackIndex = (currentTrackIndex - 1 + currentAlbumTracks.length) % currentAlbumTracks.length;
+        playCurrentTrack();
+    };
+
+    // Когда метаданные аудио загрузились (узнали длину трека)
+    audio.onloadedmetadata = () => {
+        timeline.max = audio.duration;
+        durationTimeText.innerText = formatTime(audio.duration);
+    };
+
+    // Обновление ползунка во время проигрывания
+    audio.ontimeupdate = () => {
+        timeline.value = audio.currentTime;
+        currentTimeText.innerText = formatTime(audio.currentTime);
+    };
+
+    // Ручная перемотка ползунком трека
+    timeline.oninput = () => {
+        audio.currentTime = timeline.value;
+    };
+
+    // Управление громкостью через кастомный ползунок
+    volume.oninput = () => {
+        audio.volume = volume.value;
+    };
+
+    // Автоматическое переключение на следующий трек по окончании текущего
+    audio.onended = () => {
+        nextBtn.click();
+    };
+
+    // Инициализация громкости при старте
+    audio.volume = volume.value;
+
+    initApp();
+</script>
+</body>
+</html>

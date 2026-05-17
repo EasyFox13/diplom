@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player - Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            background-color: #121212;
+            padding: 40px;
+            border-radius: 35px; /* Скругление под твой стиль */
+            width: 350px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 24px;
+            color: #aaaaaa;
+            font-weight: normal;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaaaaa;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #2a2a2a;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input:focus {
+            border: 1px solid #1ed760;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #1ed760;
+            border: none;
+            border-radius: 25px;
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn:hover {
+            scale: 1.03;
+            background-color: #1fdf64;
+        }
+        .switch-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+        .switch-text a {
+            color: #1ed760;
+            text-decoration: none;
+        }
+        .switch-text a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #ff5555;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <h2>Вход в аккаунт</h2>
+    <div class="error-message" id="errorBlock"></div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" required placeholder="example@mail.com">
+        </div>
+        <div class="input-group">
+            <label>Пароль</label>
+            <input type="password" id="password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn">Войти</button>
+    </form>
+
+    <div class="switch-text">
+        Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+    </div>
+</div>
+
+<script>
+    const LOGIN_API = "http://localhost:8080/api/users/login";
+
+    document.getElementById("loginForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const errorBlock = document.getElementById("errorBlock");
+        errorBlock.style.display = "none";
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const response = await fetch(LOGIN_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Сохраняем имя пользователя на будущее
+                localStorage.setItem("currentUsername", data.username);
+                localStorage.setItem("currentUserId", data.userId);
+                // Перенаправляем на главную
+                window.location.href = "index.html";
+            } else {
+                errorBlock.innerText = data.error || "Ошибка при входе";
+                errorBlock.style.display = "block";
+            }
+        } catch (err) {
+            errorBlock.innerText = "Не удалось связаться с бэкендом.";
+            errorBlock.style.display = "block";
+        }
+    };
+</script>
+</body>
+</html>
