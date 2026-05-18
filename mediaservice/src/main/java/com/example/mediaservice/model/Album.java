@@ -1,6 +1,7 @@
 package com.example.mediaservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "albums")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Album {
 
     @Id
@@ -34,4 +36,7 @@ public class Album {
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Track> tracks;
+
+
+
 }

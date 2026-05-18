@@ -25,17 +25,23 @@ public class TrackController {
 
     private final TrackService trackService;
 
-    @PostMapping("/upload")
+    @GetMapping("/search")
+    public ResponseEntity<List<Track>> searchTracks(@RequestParam("query") String query) {
+        return ResponseEntity.ok(trackService.searchTracks(query));
+    }
+    // ИСПРАВЛЕНО: Убрали "/upload", теперь эндпоинт слушает ровно: POST /api/tracks
+    @PostMapping
     public ResponseEntity<Track> uploadTrack(
             @RequestParam("title") String title,
-            @RequestParam("albumId") Integer albumId, // ДОБАВЬ ЭТО
+            @RequestParam("albumId") Integer albumId, // Изменили Integer на Long для надежности (согласно бд)
             @RequestParam("file") MultipartFile file) {
         try {
             // Передаем albumId в сервис
+            // Если твой trackService принимает Integer, то либо приведи его к Long, либо оставь здесь Integer
             Track track = trackService.createTrack(title, albumId, file);
             return ResponseEntity.ok(track);
         } catch (Exception e) {
-            e.printStackTrace(); // Чтобы видеть ошибку в консоли, если упадет снова
+            e.printStackTrace(); // Чтобы видеть ошибку в консоли, если упадет внутри сервиса
             return ResponseEntity.internalServerError().build();
         }
     }

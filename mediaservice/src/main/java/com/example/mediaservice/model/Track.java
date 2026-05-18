@@ -1,5 +1,7 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tracks")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Track {
 
     @Id
@@ -14,6 +17,7 @@ public class Track {
     @Column(name = "track_id")
     private Integer trackId;
 
+    @JsonIgnoreProperties("tracks")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id")
     private Album album;
@@ -33,6 +37,7 @@ public class Track {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "track", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TrackFeatures trackFeatures;
 

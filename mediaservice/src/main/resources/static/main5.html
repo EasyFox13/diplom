@@ -242,28 +242,19 @@
             </div>
 
             <div id="searchResultsSubSection" style="display: none;" class="search-results-section">
-                <div style="margin-bottom: 30px;">
-                    <h2>Результаты поиска по трекам</h2>
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        <table class="tracks-table">
-                            <thead>
-                            <tr>
-                                <th style="width: 40px; text-align: center;">#</th>
-                                <th>Название трека</th>
-                                <th>Альбом</th>
-                                <th>BPM</th>
-                                <th style="width: 80px; text-align: right;">Длительность</th>
-                            </tr>
-                            </thead>
-                            <tbody id="searchResultsList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div>
-                    <h2>Найденные альбомы</h2>
-                    <div class="recommendations-grid" id="searchAlbumsGrid"></div>
-                </div>
+                <h2>Результаты поиска по трекам</h2>
+                <table class="tracks-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 40px; text-align: center;">#</th>
+                        <th>Название трека</th>
+                        <th>Альбом</th>
+                        <th>BPM</th>
+                        <th style="width: 80px; text-align: right;">Длительность</th>
+                    </tr>
+                    </thead>
+                    <tbody id="searchResultsList"></tbody>
+                </table>
             </div>
         </div>
 
@@ -366,120 +357,81 @@
     }
 
     // ВНЕДРЕНО: Функция живого поиска треков
-   // ОБНОВЛЕННАЯ ФУНКЦИЯ КОМБИНИРОВАННОГО ПОИСКА
-async function handleSearch(query) {
-    const recommendationsBox = document.getElementById("recommendationsSubSection");
-    const searchBox = document.getElementById("searchResultsSubSection");
-    const tracksContainer = document.getElementById("searchResultsList");
-    const albumsContainer = document.getElementById("searchAlbumsGrid");
+    async function handleSearch(query) {
+        const recommendationsBox = document.getElementById("recommendationsSubSection");
+        const searchBox = document.getElementById("searchResultsSubSection");
+        const resultsContainer = document.getElementById("searchResultsList");
 
-    // Если строка пустая, скрываем результаты поиска и возвращаем рекомендации
-    if (!query.trim()) {
-        searchBox.style.display = "none";
-        recommendationsBox.style.display = "block";
-        return;
-    }
+        // Если строка пустая, скрываем результаты поиска и возвращаем рекомендации
+        if (!query.trim()) {
+            searchBox.style.display = "none";
+            recommendationsBox.style.display = "block";
+            return;
+        }
 
-    // Если мы находились на странице детального просмотра альбома, возвращаем на главную вкладку
-    document.getElementById("albumPageSection").style.display = "none";
-    document.getElementById("mainPageSection").style.display = "block";
+        // Если мы находились на странице альбома, при поиске возвращаем на главную вкладку
+        document.getElementById("albumPageSection").style.display = "none";
+        document.getElementById("mainPageSection").style.display = "block";
 
-    try {
-        // Запускаем оба запроса одновременно для максимальной скорости
-        const [tracksResponse, albumsResponse] = await Promise.all([
-            fetch(`${TRACKS_API}/search?query=${encodeURIComponent(query)}`),
-            fetch(`http://localhost:8080/api/albums/search?query=${encodeURIComponent(query)}`)
-        ]);
+        try {
+            // Делаем GET запрос на эндпоинт поиска (например, /api/tracks/search?query=...)
+            const response = await fetch(`${TRACKS_API}/search?query=${encodeURIComponent(query)}`);
 
-        searchBox.style.display = "block";
-        recommendationsBox.style.display = "none";
+            searchBox.style.display = "block";
+            recommendationsBox.style.display = "none";
+            resultsContainer.innerHTML = "";
 
-        tracksContainer.innerHTML = "";
-        albumsContainer.innerHTML = "";
+            if (!response.ok) {
+                resultsContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка сервера при поиске</td></tr>";
+                return;
+            }
 
-        // --- 1. ОТРИСОВКА ТРЕКОВ ---
-        if (tracksResponse.ok) {
-            const tracks = await tracksResponse.json();
+            const tracks = await response.json();
+
             if (tracks.length === 0) {
-                tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#777; text-align:center;'>Трэки не найдены</td></tr>";
-            } else {
-                tracks.forEach((track, index) => {
-                    const tr = document.createElement("tr");
-                    tr.className = "track-row";
-
-                    const isCurrentTrackPlaying = currentAlbumTracks[currentTrackIndex]?.trackId === track.trackId;
-                    if (isCurrentTrackPlaying) {
-                        tr.classList.add("playing-now");
-                    }
-
-                    const albumName = track.album ? (track.album.title || track.album.name) : "—";
-
-                    tr.innerHTML = `
-                        <td style="text-align: center; color: var(--text-muted);">${index + 1}</td>
-                        <td style="font-weight: 500;">${track.title || "Без названия"}</td>
-                        <td style="color: var(--text-muted);">${albumName}</td>
-                        <td style="color: var(--text-muted);">${track.bpm || "—"}</td>
-                        <td style="text-align: right; color: var(--text-muted); font-family: monospace;">${formatTime(track.duration)}</td>
-                    `;
-
-                    tr.onclick = () => {
-                        currentAlbumTracks = tracks;
-                        currentTrackIndex = index;
-                        currentAlbumTitle = track.album ? (track.album.title || track.album.name) : "Найденные треки";
-                        currentAlbumCover = track.album ? track.album.coverUrl : "";
-                        playCurrentTrack();
-                    };
-
-                    tracksContainer.appendChild(tr);
-                });
+                resultsContainer.innerHTML = "<tr><td colspan='5' style='color:#777; text-align:center;'>Ничего не найдено</td></tr>";
+                return;
             }
-        } else {
-            tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка сервера при поиске треков</td></tr>";
+
+            // Рендерим найденные треки
+            tracks.forEach((track, index) => {
+                const tr = document.createElement("tr");
+                tr.className = "track-row";
+
+                const isCurrentTrackPlaying = currentAlbumTracks[currentTrackIndex]?.trackId === track.trackId;
+                if (isCurrentTrackPlaying) {
+                    tr.classList.add("playing-now");
+                }
+
+                // Выводим: Номер, Название, Название альбома, BPM, Длительность
+                   // ИСПРАВЛЕНО: Проверяем наличие объекта album и берем его title
+                const albumName = track.album ? (track.album.title || track.album.name) : "—";
+
+                tr.innerHTML = `
+                <td style="text-align: center; color: var(--text-muted);">${index + 1}</td>
+                <td style="font-weight: 500;">${track.title || "Без названия"}</td>
+                <td style="color: var(--text-muted);">${albumName}</td>
+                <td style="color: var(--text-muted);">${track.bpm || "—"}</td>
+                <td style="text-align: right; color: var(--text-muted); font-family: monospace;">${formatTime(track.duration)}</td>
+                `;
+
+                // При клике на трек из поиска — формируем очередь из всех результатов поиска
+               tr.onclick = () => {
+                currentAlbumTracks = tracks;
+                currentTrackIndex = index;
+                currentAlbumTitle = track.album ? (track.album.title || track.album.name) : "Найденные треки";
+                currentAlbumCover = track.album ? track.album.coverUrl : "";
+                playCurrentTrack();
+                };
+
+                resultsContainer.appendChild(tr);
+            });
+
+        } catch (error) {
+            console.error("Ошибка при выполнении поиска:", error);
+            resultsContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка подключения к бэкенду</td></tr>";
         }
-
-        // --- 2. ОТРИСОВКА АЛЬБОМОВ ---
-        if (albumsResponse.ok) {
-            const albums = await albumsResponse.json();
-            if (albums.length === 0) {
-                albumsContainer.innerHTML = "<div style='color:#777; padding: 10px;'>Альбомы не найдены</div>";
-            } else {
-                albums.forEach(album => {
-                    const card = document.createElement("div");
-                    card.className = "rec-card";
-
-                    // Используем безопасную встроенную SVG-заглушку
-                    const safeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><rect width='150' height='150' fill='%23333333'/></svg>";
-
-                    card.innerHTML = `
-                        <img src="${album.coverUrl || safeSvg}"
-                             alt="Cover"
-                             onerror="this.onerror=null; this.src='${safeSvg}';">
-                        <div class="title">${album.title || "Без названия"}</div>
-                        <div class="add-album-btn" title="Добавить в медиатеку">+</div>
-                    `;
-
-                    // При клике открываем страницу этого альбома
-                    card.onclick = () => showAlbumPage(album);
-
-                    // Кнопка добавления в медиатеку прямо из поиска
-                    const addBtn = card.querySelector(".add-album-btn");
-                    addBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        saveAlbumToUserLibrary(album.albumId || album.id);
-                    };
-
-                    albumsContainer.appendChild(card);
-                });
-            }
-        } else {
-            albumsContainer.innerHTML = "<div style='color:#ff6b6b; padding: 10px;'>Ошибка сервера при поиске альбомов</div>";
-        }
-
-    } catch (error) {
-        console.error("Ошибка при выполнении глобального поиска:", error);
-        tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка подключения к бэкенду</td></tr>";
     }
-}
 
     function showAlbumPage(album) {
         currentOpenedAlbum = album;

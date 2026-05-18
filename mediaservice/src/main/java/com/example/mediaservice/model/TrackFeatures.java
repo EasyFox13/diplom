@@ -1,5 +1,6 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class TrackFeatures {
     @MapsId
     @JoinColumn(name = "track_id")
     @ToString.Exclude
+    @JsonIgnore
     private Track track;
 
     @Column(length = 50)

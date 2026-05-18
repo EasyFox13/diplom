@@ -39,7 +39,7 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 20px; /* Отступ между кружком-логотипом и кнопкой навигации */
         }
         .logo-circle {
             width: 32px; height: 32px;
@@ -47,6 +47,7 @@
             cursor: pointer;
         }
 
+        /* ВНЕДРЕНО: Стили для кнопки навигации в шапке по эскизу */
         .nav-home-btn {
             background: none;
             border: none;
@@ -59,10 +60,14 @@
             align-items: center;
             justify-content: center;
             transition: opacity 0.2s, transform 0.1s;
-            opacity: 0.5;
+            opacity: 0.5; /* По умолчанию бледная, когда мы на главной */
         }
-        .nav-home-btn:hover { transform: scale(1.1); }
-        .nav-home-btn:active { transform: scale(0.95); }
+        .nav-home-btn:hover {
+            transform: scale(1.1);
+        }
+        .nav-home-btn:active {
+            transform: scale(0.95);
+        }
 
         .header-center {
             display: flex; align-items: center;
@@ -92,6 +97,7 @@
         .sidebar h3 { margin-top: 0; color: var(--text-muted); font-size: 15px; font-weight: normal; margin-bottom: 15px; }
         .content-area { flex: 1; }
 
+        /* СТИЛИ ДЛЯ КАРТОЧЕК В САЙДБАРЕ */
         .sidebar-album-card {
             display: flex;
             align-items: center;
@@ -170,9 +176,6 @@
         .rec-card:hover .add-album-btn { opacity: 1; transform: scale(1); }
         .add-album-btn:hover { background-color: var(--text-main); color: black; border-color: var(--text-main); scale: 1.05; }
 
-        /* Блок результатов поиска */
-        .search-results-section { margin-top: 10px; }
-
         /* 3. КАСТОМНЫЙ НИЖНИЙ ПЛЕЕР */
         .bottom-player {
             height: 150px;
@@ -216,10 +219,7 @@
         <div class="logo-circle" onclick="showMainPage()"></div>
         <button id="navHomeBtn" class="nav-home-btn" onclick="showMainPage()" title="На главную">‹</button>
     </div>
-    <div class="header-center">
-        <span>🔍</span>
-        <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Что хочешь включить?">
-    </div>
+    <div class="header-center"><span>🔍</span><input type="text" placeholder="Что хочешь включить?"></div>
     <div class="header-right">
         <div style="display: flex; align-items: center; gap: 10px;">
             <span id="displayUsername" style="font-weight: bold; font-size: 14px; color: #aaa;">Гость</span>
@@ -236,35 +236,8 @@
 
     <div class="content-area smooth-box">
         <div id="mainPageSection">
-            <div id="recommendationsSubSection">
-                <h2 id="mainSectionHeader">всякие рекомендации</h2>
-                <div class="recommendations-grid" id="recGrid"></div>
-            </div>
-
-            <div id="searchResultsSubSection" style="display: none;" class="search-results-section">
-                <div style="margin-bottom: 30px;">
-                    <h2>Результаты поиска по трекам</h2>
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        <table class="tracks-table">
-                            <thead>
-                            <tr>
-                                <th style="width: 40px; text-align: center;">#</th>
-                                <th>Название трека</th>
-                                <th>Альбом</th>
-                                <th>BPM</th>
-                                <th style="width: 80px; text-align: right;">Длительность</th>
-                            </tr>
-                            </thead>
-                            <tbody id="searchResultsList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div>
-                    <h2>Найденные альбомы</h2>
-                    <div class="recommendations-grid" id="searchAlbumsGrid"></div>
-                </div>
-            </div>
+            <h2 id="mainSectionHeader">всякие рекомендации</h2>
+            <div class="recommendations-grid" id="recGrid"></div>
         </div>
 
         <div id="albumPageSection" style="display: none;">
@@ -365,142 +338,33 @@
         });
     }
 
-    // ВНЕДРЕНО: Функция живого поиска треков
-   // ОБНОВЛЕННАЯ ФУНКЦИЯ КОМБИНИРОВАННОГО ПОИСКА
-async function handleSearch(query) {
-    const recommendationsBox = document.getElementById("recommendationsSubSection");
-    const searchBox = document.getElementById("searchResultsSubSection");
-    const tracksContainer = document.getElementById("searchResultsList");
-    const albumsContainer = document.getElementById("searchAlbumsGrid");
-
-    // Если строка пустая, скрываем результаты поиска и возвращаем рекомендации
-    if (!query.trim()) {
-        searchBox.style.display = "none";
-        recommendationsBox.style.display = "block";
-        return;
-    }
-
-    // Если мы находились на странице детального просмотра альбома, возвращаем на главную вкладку
-    document.getElementById("albumPageSection").style.display = "none";
-    document.getElementById("mainPageSection").style.display = "block";
-
-    try {
-        // Запускаем оба запроса одновременно для максимальной скорости
-        const [tracksResponse, albumsResponse] = await Promise.all([
-            fetch(`${TRACKS_API}/search?query=${encodeURIComponent(query)}`),
-            fetch(`http://localhost:8080/api/albums/search?query=${encodeURIComponent(query)}`)
-        ]);
-
-        searchBox.style.display = "block";
-        recommendationsBox.style.display = "none";
-
-        tracksContainer.innerHTML = "";
-        albumsContainer.innerHTML = "";
-
-        // --- 1. ОТРИСОВКА ТРЕКОВ ---
-        if (tracksResponse.ok) {
-            const tracks = await tracksResponse.json();
-            if (tracks.length === 0) {
-                tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#777; text-align:center;'>Трэки не найдены</td></tr>";
-            } else {
-                tracks.forEach((track, index) => {
-                    const tr = document.createElement("tr");
-                    tr.className = "track-row";
-
-                    const isCurrentTrackPlaying = currentAlbumTracks[currentTrackIndex]?.trackId === track.trackId;
-                    if (isCurrentTrackPlaying) {
-                        tr.classList.add("playing-now");
-                    }
-
-                    const albumName = track.album ? (track.album.title || track.album.name) : "—";
-
-                    tr.innerHTML = `
-                        <td style="text-align: center; color: var(--text-muted);">${index + 1}</td>
-                        <td style="font-weight: 500;">${track.title || "Без названия"}</td>
-                        <td style="color: var(--text-muted);">${albumName}</td>
-                        <td style="color: var(--text-muted);">${track.bpm || "—"}</td>
-                        <td style="text-align: right; color: var(--text-muted); font-family: monospace;">${formatTime(track.duration)}</td>
-                    `;
-
-                    tr.onclick = () => {
-                        currentAlbumTracks = tracks;
-                        currentTrackIndex = index;
-                        currentAlbumTitle = track.album ? (track.album.title || track.album.name) : "Найденные треки";
-                        currentAlbumCover = track.album ? track.album.coverUrl : "";
-                        playCurrentTrack();
-                    };
-
-                    tracksContainer.appendChild(tr);
-                });
-            }
-        } else {
-            tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка сервера при поиске треков</td></tr>";
-        }
-
-        // --- 2. ОТРИСОВКА АЛЬБОМОВ ---
-        if (albumsResponse.ok) {
-            const albums = await albumsResponse.json();
-            if (albums.length === 0) {
-                albumsContainer.innerHTML = "<div style='color:#777; padding: 10px;'>Альбомы не найдены</div>";
-            } else {
-                albums.forEach(album => {
-                    const card = document.createElement("div");
-                    card.className = "rec-card";
-
-                    // Используем безопасную встроенную SVG-заглушку
-                    const safeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><rect width='150' height='150' fill='%23333333'/></svg>";
-
-                    card.innerHTML = `
-                        <img src="${album.coverUrl || safeSvg}"
-                             alt="Cover"
-                             onerror="this.onerror=null; this.src='${safeSvg}';">
-                        <div class="title">${album.title || "Без названия"}</div>
-                        <div class="add-album-btn" title="Добавить в медиатеку">+</div>
-                    `;
-
-                    // При клике открываем страницу этого альбома
-                    card.onclick = () => showAlbumPage(album);
-
-                    // Кнопка добавления в медиатеку прямо из поиска
-                    const addBtn = card.querySelector(".add-album-btn");
-                    addBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        saveAlbumToUserLibrary(album.albumId || album.id);
-                    };
-
-                    albumsContainer.appendChild(card);
-                });
-            }
-        } else {
-            albumsContainer.innerHTML = "<div style='color:#ff6b6b; padding: 10px;'>Ошибка сервера при поиске альбомов</div>";
-        }
-
-    } catch (error) {
-        console.error("Ошибка при выполнении глобального поиска:", error);
-        tracksContainer.innerHTML = "<tr><td colspan='5' style='color:#ff6b6b; text-align:center;'>Ошибка подключения к бэкенду</td></tr>";
-    }
-}
-
+    // НАВИГАЦИЯ: Открытие страницы конкретного альбома
     function showAlbumPage(album) {
         currentOpenedAlbum = album;
         document.getElementById("mainPageSection").style.display = "none";
         document.getElementById("albumPageSection").style.display = "block";
+
+        document.getElementById("albumPageTitle").innerText = album.title || album.name || "Без названия";
+        document.getElementById("albumPageCover").src = album.coverUrl || 'https://via.placeholder.com/150?text=No+Cover';
+        document.getElementById("albumPageCover").onerror = function() { this.src = 'https://via.placeholder.com/150?text=No+Cover'; };
+
+        // ВНЕДРЕНО: Делаем кнопку возврата в шапке яркой (светлой), так как мы ушли с главной
         document.getElementById("navHomeBtn").style.opacity = "1";
+
         renderAlbumTracks(album);
     }
 
+    // НАВИГАЦИЯ: Возврат на главную страницу рекомендаций
     function showMainPage() {
         currentOpenedAlbum = null;
         document.getElementById("mainPageSection").style.display = "block";
         document.getElementById("albumPageSection").style.display = "none";
-        document.getElementById("navHomeBtn").style.opacity = "0.5";
 
-        // Очищаем поиск при принудительном возврате на главную
-        document.getElementById("searchInput").value = "";
-        document.getElementById("searchResultsSubSection").style.display = "none";
-        document.getElementById("recommendationsSubSection").style.display = "block";
+        // ВНЕДРЕНО: Делаем кнопку бледнее, сигнализируя, что мы уже на главной
+        document.getElementById("navHomeBtn").style.opacity = "0.5";
     }
 
+    // Рендер левой панели
     function renderSidebar(albums) {
         cachedSavedAlbums = albums;
         const container = document.getElementById("sidebarAlbumsList");
@@ -556,6 +420,7 @@ async function handleSearch(query) {
         });
     }
 
+    // Рендеринг треков внутри страницы альбома
     function renderAlbumTracks(album) {
         const container = document.getElementById("albumTracksList");
         container.innerHTML = "";
@@ -619,6 +484,7 @@ async function handleSearch(query) {
         });
     }
 
+    // ИНИЦИАЛИЗАЦИЯ И ЗАГРУЗКА ДАННЫХ
     async function initApp() {
         const userId = localStorage.getItem("currentUserId");
         if (!userId) return;
@@ -645,6 +511,7 @@ async function handleSearch(query) {
         }
     }
 
+    // СТРИМИНГ И ЗАПУСК ПЛЕЕРА
     function loadAndPlayAlbum(album, trackIndex) {
         if(!album.tracks || album.tracks.length === 0) {
             alert(`В альбоме "${album.title || 'Без названия'}" нет треков.`);
@@ -662,22 +529,12 @@ async function handleSearch(query) {
         const track = currentAlbumTracks[currentTrackIndex];
 
         document.getElementById("pTitle").innerText = track.title;
-
-        // Определяем имя альбома для плеера
-        let displayAlbumName = currentAlbumTitle;
-        if (track.album) {
-            displayAlbumName = track.album.title || track.album.name || currentAlbumTitle;
-        }
-        document.getElementById("pArtist").innerText = displayAlbumName;
+        document.getElementById("pArtist").innerText = currentAlbumTitle;
 
         const pCover = document.getElementById("pCover");
         if(pCover) {
-            let displayCover = currentAlbumCover;
-            if (track.album && track.album.coverUrl) {
-                displayCover = track.album.coverUrl;
-            }
-            pCover.src = displayCover || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><rect width='52' height='52' fill='%23333'/></svg>";
-            pCover.onerror = function() { this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><rect width='52' height='52' fill='%23333'/></svg>"; };
+            pCover.src = currentAlbumCover || 'https://via.placeholder.com/150?text=No+Cover';
+            pCover.onerror = function() { this.src = 'https://via.placeholder.com/150?text=No+Cover'; };
         }
 
         audio.src = `${TRACKS_API}/${track.trackId || track.id}/stream`;
@@ -690,15 +547,6 @@ async function handleSearch(query) {
         renderSidebar(cachedSavedAlbums);
         if (currentOpenedAlbum && (currentOpenedAlbum.title === currentAlbumTitle || currentOpenedAlbum.name === currentAlbumTitle)) {
             renderAlbumTracks(currentOpenedAlbum);
-        }
-        // Также обновляем стили подсвеченного трека в результатах поиска, если он открыт
-        const searchInput = document.getElementById("searchInput").value;
-        if (searchInput.trim() && document.getElementById("searchResultsSubSection").style.display !== "none") {
-            const rows = document.querySelectorAll("#searchResultsList .track-row");
-            rows.forEach((row, idx) => {
-                const isPlaying = currentAlbumTracks[currentTrackIndex]?.trackId === currentAlbumTracks[idx]?.trackId;
-                if (isPlaying) row.classList.add("playing-now"); else row.classList.remove("playing-now");
-            });
         }
     }
 
@@ -735,13 +583,20 @@ async function handleSearch(query) {
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
+    // ЛОГИКА УПРАВЛЕНИЯ ПЛЕЕРА
     playBtn.onclick = () => {
         if (!audio.src) return;
         if (audio.paused) audio.play(); else audio.pause();
     };
 
-    audio.onplay = () => { playBtn.innerText = "||"; updateLiveUI(); };
-    audio.onpause = () => { playBtn.innerText = "▷"; updateLiveUI(); };
+    audio.onplay = () => {
+        playBtn.innerText = "||";
+        updateLiveUI();
+    };
+    audio.onpause = () => {
+        playBtn.innerText = "▷";
+        updateLiveUI();
+    };
 
     nextBtn.onclick = () => {
         if (currentAlbumTracks.length === 0) return;
@@ -770,7 +625,9 @@ async function handleSearch(query) {
     audio.onended = () => { nextBtn.click(); };
     audio.volume = volume.value;
 
-    window.onload = () => { initApp(); };
+    window.onload = () => {
+        initApp();
+    };
 </script>
 </body>
 </html>

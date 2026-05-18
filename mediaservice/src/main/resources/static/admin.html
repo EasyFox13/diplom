@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player - Admin Panel</title>
+    <style>
+        :root {
+            --bg-main: #202020;
+            --bg-dark: #121212;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --spotify-green: #1ed760;
+            --error-red: #ff6b6b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .header-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .back-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-btn:hover { background-color: #444; }
+
+        .form-box {
+            background-color: var(--bg-dark);
+            border-radius: 24px;
+            padding: 28px;
+            box-sizing: border-box;
+            border: 1px solid #252525;
+        }
+
+        .form-box h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--spotify-green);
+            font-weight: 600;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            background-color: #2a2a2a;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--spotify-green);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .submit-btn {
+            background-color: var(--spotify-green);
+            color: black;
+            border: none;
+            padding: 14px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            scale: 1.02;
+            background-color: #1fdf64;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        input[type="file"] {
+            background: #1a1a1a;
+            padding: 8px;
+            border-dashed: 2px #404040;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header-block">
+        <h1>Панель администратора ⚙️</h1>
+        <a href="index.html" class="back-btn">← В плеер</a>
+    </div>
+
+    <div class="form-box">
+        <h2>1. Добавить исполнителя</h2>
+        <form id="artistForm">
+            <div class="form-group">
+                <label>Имя / Псевдоним артиста</label>
+                <input type="text" id="artistName" required placeholder="Например, Скриптонит, Linkin Park">
+            </div>
+            <div class="form-group">
+                <label>Биография</label>
+                <textarea id="artistBio" placeholder="Краткое описание артиста..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Ссылка на фото артиста (URL)</label>
+                <input type="text" id="artistImageUrl" placeholder="http://example.com/photo.jpg">
+            </div>
+            <button type="submit" class="submit-btn">Создать артиста</button>
+        </form>
+    </div>
+
+    <div class="form-box">
+        <h2>2. Создать альбом</h2>
+        <form id="albumForm">
+            <div class="form-group">
+                <label>Выберите исполнителя (чей это альбом)</label>
+                <select id="albumArtistSelect" required>
+                    <option value="">-- Загрузка исполнителей... --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Название альбома</label>
+                <input type="text" id="albumTitle" required placeholder="Например, Hybrid Theory">
+            </div>
+            <div class="form-group">
+                <label>Ссылка на обложку (URL)</label>
+                <input type="text" id="albumCoverUrl" placeholder="http://example.com/cover.jpg">
+            </div>
+            <div class="form-group">
+                <label>Дата релиза</label>
+                <input type="date" id="albumReleaseDate">
+            </div>
+            <button type="submit" class="submit-btn">Создать альбом</button>
+        </form>
+    </div>
+
+    <div class="form-box">
+        <h2>3. Загрузить трек (.mp3)</h2>
+        <form id="trackForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Выберите артиста</label>
+                <select id="trackArtistSelect" required onchange="onTrackArtistChange()">
+                    <option value="">-- Выберите артиста --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Выберите альбом</label>
+                <select id="trackAlbumSelect" required disabled>
+                    <option value="">-- Сначала выберите артиста сверху --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Название трека</label>
+                <input type="text" id="trackTitle" required placeholder="Например, In the End">
+            </div>
+            <div class="form-group">
+                <label>BPM (Темп)</label>
+                <input type="number" id="trackBpm" placeholder="120" min="0">
+            </div>
+            <div class="form-group">
+                <label>Аудиофайл (MP3)</label>
+                <input type="file" id="trackFile" accept="audio/mpeg" required>
+            </div>
+            <button type="submit" class="submit-btn">Загрузить трек в систему</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const API_BASE = "http://localhost:8080/api";
+
+    // При загрузке страницы заполняем списки артистов в обеих формах
+    window.onload = function() {
+        loadArtistsDropdowns();
+    };
+
+    // Загружаем артистов сразу в два выпадающих списка (для альбома и для трека)
+    async function loadArtistsDropdowns() {
+        const albumArtistSelect = document.getElementById("albumArtistSelect");
+        const trackArtistSelect = document.getElementById("trackArtistSelect");
+
+        try {
+            const res = await fetch(`${API_BASE}/artists`);
+            if (res.ok) {
+                const artists = await res.json();
+
+                const placeholder = '<option value="">-- Выберите артиста --</option>';
+                albumArtistSelect.innerHTML = placeholder;
+                trackArtistSelect.innerHTML = placeholder;
+
+                artists.forEach(a => {
+                    const htmlOption = `<option value="${a.artistId || a.id}">${a.name}</option>`;
+                    albumArtistSelect.innerHTML += htmlOption;
+                    trackArtistSelect.innerHTML += htmlOption;
+                });
+            }
+        } catch (err) {
+            console.error("Ошибка загрузки артистов:", err);
+        }
+    }
+
+    // РЕАКЦИЯ НА ВЫБОР АРТИСТА В ФОРМЕ ТРЕКА
+    async function onTrackArtistChange() {
+        const artistId = document.getElementById("trackArtistSelect").value;
+        const albumSelect = document.getElementById("trackAlbumSelect");
+
+        // Если артист не выбран, тушим список альбомов
+        if (!artistId) {
+            albumSelect.innerHTML = '<option value="">-- Сначала выберите артиста сверху --</option>';
+            albumSelect.disabled = true;
+            return;
+        }
+
+        albumSelect.innerHTML = '<option value="">Загрузка альбомов...</option>';
+        albumSelect.disabled = true;
+
+        try {
+            // Стучимся на бэк за альбомами конкретного артиста
+            // Маршрут может быть /api/artists/{id}/albums или /api/albums?artistId={id}
+            // Используем стандартный для Spring REST вариант:
+            const res = await fetch(`${API_BASE}/artists/${artistId}/albums`);
+
+            if (res.ok) {
+                const albums = await res.json();
+
+                if (albums.length === 0) {
+                    albumSelect.innerHTML = '<option value="">У этого артиста нет альбомов. Создайте альбом сначала!</option>';
+                    return;
+                }
+
+                albumSelect.innerHTML = '<option value="">-- Выберите альбом --</option>';
+                albums.forEach(al => {
+                    albumSelect.innerHTML += `<option value="${al.albumId || al.id}">${al.title}</option>`;
+                });
+                albumSelect.disabled = false; // Активируем выбор
+            } else {
+                albumSelect.innerHTML = '<option value="">Не удалось загрузить альбомы артиста</option>';
+            }
+        } catch (err) {
+            console.error("Ошибка сети при получении альбомов артиста:", err);
+            albumSelect.innerHTML = '<option value="">Ошибка сервера</option>';
+        }
+    }
+
+    // ОТПРАВКА: СОЗДАТЬ АРТИСТА
+    document.getElementById("artistForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const bodyData = {
+            name: document.getElementById("artistName").value,
+            bio: document.getElementById("artistBio").value,
+            imageUrl: document.getElementById("artistImageUrl").value
+        };
+
+        try {
+            const res = await fetch(`${API_BASE}/artists`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyData)
+            });
+            if (res.ok) {
+                alert("Артист успешно создан!");
+                document.getElementById("artistForm").reset();
+                loadArtistsDropdowns(); // Перезагружаем списки везде
+            } else {
+                alert("Ошибка при создании артиста");
+            }
+        } catch (err) {
+            alert("Нет связи с сервером");
+        }
+    };
+
+    // ОТПРАВКА: СОЗДАТЬ АЛЬБОМ
+    document.getElementById("albumForm").onsubmit = async (e) => {
+        e.preventDefault();
+        const artistId = document.getElementById("albumArtistSelect").value;
+        const bodyData = {
+            title: document.getElementById("albumTitle").value,
+            coverUrl: document.getElementById("albumCoverUrl").value,
+            releaseDate: document.getElementById("albumReleaseDate").value
+        };
+
+        try {
+            const res = await fetch(`${API_BASE}/albums?artistId=${artistId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(bodyData)
+            });
+            if (res.ok) {
+                alert("Альбом успешно создан!");
+                document.getElementById("albumForm").reset();
+                // Если сейчас в форме трека выбран этот же артист, обновим его список альбомов
+                onTrackArtistChange();
+            } else {
+                alert("Ошибка при создании альбома");
+            }
+        } catch (err) {
+            alert("Нет связи с сервером");
+        }
+    };
+
+    // ОТПРАВКА: ЗАГРУЗИТЬ ТРЕК
+    document.getElementById("trackForm").onsubmit = async (e) => {
+        e.preventDefault();
+
+        const albumId = document.getElementById("trackAlbumSelect").value;
+        const title = document.getElementById("trackTitle").value;
+        const bpm = document.getElementById("trackBpm").value;
+        const fileInput = document.getElementById("trackFile");
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("bpm", bpm);
+        formData.append("albumId", albumId);
+        formData.append("file", fileInput.files[0]);
+
+        try {
+            const res = await fetch(`${API_BASE}/tracks`, {
+                method: "POST",
+                body: formData
+            });
+
+            if (res.ok) {
+                alert("Трек успешно загружен в альбом!");
+                document.getElementById("trackForm").reset();
+                document.getElementById("trackAlbumSelect").disabled = true;
+            } else {
+                alert("Ошибка при загрузке трека на бэкенд");
+            }
+        } catch (err) {
+            alert("Ошибка сети при отправке файла");
+        }
+    };
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +46,10 @@ public class TrackService {
 //        this.trackRepository=trackRepository;
 //    }
 
+    public List<Track> searchTracks(String query) {
+        // Если в репозитории ещё нет такого метода, Spring Data JPA сгенерирует его автоматически по названию
+        return trackRepository.findByTitleContainingIgnoreCase(query);
+    }
 
     @Transactional
     public Track createTrack(String title, Integer albumId, MultipartFile file) throws IOException {

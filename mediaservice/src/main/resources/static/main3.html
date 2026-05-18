@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Player - Home</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --bg-main: #202020;
+            --bg-dark: #121212;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --spotify-green: #1ed760;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 1. ВЕРХНЯЯ ПАНЕЛЬ */
+        .app-header {
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+        .logo-circle {
+            width: 32px; height: 32px;
+            background-color: #ffffff; border-radius: 50%;
+            cursor: pointer;
+        }
+        .header-center {
+            display: flex; align-items: center;
+            background-color: #2a2a2a; border-radius: 20px;
+            padding: 6px 16px; width: 400px;
+        }
+        .header-center input {
+            background: transparent; border: none; color: white;
+            outline: none; width: 100%; font-size: 14px; margin-left: 10px;
+        }
+        .profile-icon {
+            width: 36px; height: 36px; border: 2px solid var(--text-muted);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; font-size: 20px;
+        }
+
+        /* 2. ОСНОВНОЙ БЛОК */
+        .main-layout {
+            display: flex; flex: 1; padding: 0 16px 16px 16px; gap: 16px;
+            height: calc(100vh - 64px - 150px); box-sizing: border-box;
+        }
+        .smooth-box {
+            background-color: var(--bg-dark); border-radius: 35px;
+            padding: 24px; box-sizing: border-box; overflow-y: auto;
+        }
+        .sidebar { width: 300px; min-width: 250px; }
+        .sidebar h3 { margin-top: 0; color: var(--text-muted); font-size: 15px; font-weight: normal; }
+        .content-area { flex: 1; }
+        .content-area h2 { margin-top: 0; font-size: 22px; color: var(--text-muted); font-weight: normal; }
+
+        .album-link {
+            padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: #ccc;
+        }
+        .album-link:hover { background-color: #222; color: #fff; }
+
+        .recommendations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+
+        .rec-card {
+            background-color: #1a1a1a;
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            position: relative;
+        }
+        .rec-card:hover { background-color: #252525; }
+        .rec-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; margin-bottom: 10px; }
+        .rec-card .title { font-weight: bold; font-size: 14px; }
+
+        /* Кнопка плюс в кружке */
+        .add-album-btn {
+            position: absolute;
+            right: 24px;
+            bottom: 45px;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .rec-card:hover .add-album-btn {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .add-album-btn:hover {
+            background-color: var(--text-main);
+            color: black;
+            border-color: var(--text-main);
+            scale: 1.05;
+        }
+
+        /* 3. КАСТОМНЫЙ НИЖНИЙ ПЛЕЕР */
+        .bottom-player {
+            height: 150px;
+            background-color: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-sizing: border-box;
+            border-top: 1px solid #252525;
+        }
+
+        .player-track-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 30%;
+        }
+        .cover-placeholder { width: 52px; height: 52px; background-color: #333; border: 2px solid white; object-fit: cover; }
+        .meta { display: flex; flex-direction: column; font-family: monospace; }
+        .meta .t-title { font-size: 14px; font-weight: bold; }
+        .meta .t-artist { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .player-controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            gap: 12px;
+        }
+
+        .playback-buttons {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 22px;
+        }
+        .playback-buttons span {
+            cursor: pointer;
+            user-select: none;
+            transition: 0.1s;
+            display: inline-block;
+            width: 24px;
+            text-align: center;
+        }
+        .playback-buttons span:hover { color: var(--spotify-green); }
+        #globalPlayBtn { font-size: 28px; font-weight: bold; }
+
+        .player-right-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 30%;
+        }
+
+        /* Стилизация ползунков */
+        .slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: monospace;
+            width: 100%;
+            justify-content: center;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none; background: #404040;
+            height: 4px; border-radius: 2px; outline: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 10px; height: 10px;
+            border-radius: 50%; background: white; transition: 0.1s;
+        }
+        input[type="range"]:hover::-webkit-slider-thumb { background: var(--spotify-green); scale: 1.2; }
+
+        #timelineSlider {
+            width: 100%;
+            max-width: 400px;
+        }
+        #volumeSlider { width: 100px; }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-left"><div class="logo-circle" onclick="location.reload()"></div></div>
+    <div class="header-center"><span>🔍</span><input type="text" placeholder="Что хочешь включить?"></div>
+    <div class="header-right">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="displayUsername" style="font-weight: bold; font-size: 14px; color: #aaa;">Гость</span>
+            <div class="profile-icon" onclick="logout()" title="Выйти">👤</div>
+        </div>
+    </div>
+</header>
+
+<main class="main-layout">
+    <div class="sidebar smooth-box">
+        <h3>все плейлисты и сохраненные альбомы пользователя</h3>
+        <div id="sidebarAlbumsList"><div style="color: #444; font-size: 13px;">Загрузка...</div></div>
+    </div>
+
+    <div class="content-area smooth-box">
+        <h2>всякие рекомендации</h2>
+        <div class="recommendations-grid" id="recGrid"></div>
+    </div>
+</main>
+
+<audio id="audioPlayer" style="display: none;"></audio>
+
+<footer class="bottom-player">
+    <div class="player-track-info">
+        <img class="cover-placeholder" id="pCover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='52' height='52'><rect width='52' height='52' fill='%23333'/></svg>">
+        <div class="meta">
+            <span class="t-title" id="pTitle">title</span>
+            <span class="t-artist" id="pArtist">artist</span>
+        </div>
+    </div>
+
+    <div class="player-controls-container">
+        <div class="playback-buttons">
+            <span id="prevBtn">&lt;</span>
+            <span id="globalPlayBtn">▷</span>
+            <span id="nextBtn">&gt;</span>
+        </div>
+
+        <div class="slider-wrapper">
+            <span id="currentTimeText">0:00</span>
+            <input type="range" id="timelineSlider" min="0" value="0" step="1">
+            <span id="durationTimeText">0:00</span>
+        </div>
+    </div>
+
+    <div class="player-right-container">
+        <div class="slider-wrapper" style="justify-content: flex-end;">
+            <span>🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="1" value="0.7" step="0.01">
+        </div>
+    </div>
+</footer>
+
+<script>
+    const TRACKS_API = "http://localhost:8080/api/tracks";
+    const ALBUMS_API = "http://localhost:8080/api/albums";
+
+    const audio = document.getElementById("audioPlayer");
+    const playBtn = document.getElementById("globalPlayBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const timeline = document.getElementById("timelineSlider");
+    const volume = document.getElementById("volumeSlider");
+
+    const currentTimeText = document.getElementById("currentTimeText");
+    const durationTimeText = document.getElementById("durationTimeText");
+
+    let currentAlbumTracks = [];
+    let currentTrackIndex = -1;
+    let currentAlbumTitle = "";
+    let currentAlbumCover = "";
+
+    // Функция выхода
+    function logout() {
+        if(confirm("Вы действительно хотите выйти?")) {
+            localStorage.removeItem("currentUsername");
+            localStorage.removeItem("currentUserId");
+            window.location.href = "login.html";
+        }
+    }
+
+    // Проверка авторизации
+    const savedName = localStorage.getItem("currentUsername");
+    const savedId = localStorage.getItem("currentUserId");
+
+    if (!savedName || !savedId) {
+        window.location.href = "login.html";
+    } else {
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("displayUsername").innerText = savedName;
+        });
+    }
+
+    function renderSidebar(albums) {
+        const container = document.getElementById("sidebarAlbumsList");
+        container.innerHTML = "";
+
+        console.log("Альбомы, пришедшие в сайдбар:", albums);
+
+        if (!albums || albums.length === 0) {
+            container.innerHTML = "<div style='color: #444; font-size: 13px;'>Медиатека пуста</div>";
+            return;
+        }
+
+        albums.forEach(album => {
+            const item = document.createElement("div");
+            item.className = "album-link";
+
+            // Подстраховка: отображаем название альбома
+            item.innerText = album.title || album.name || `Альбом №${album.albumId || album.id}`;
+
+            item.onclick = () => loadAndPlayAlbum(album, 0);
+            container.appendChild(item);
+        });
+    }
+
+    function renderRecommendations(albums) {
+        const container = document.getElementById("recGrid");
+        container.innerHTML = "";
+
+        if (!albums || albums.length === 0) {
+            container.innerHTML = "<div style='color:#555;'>Тут пока пусто</div>";
+            return;
+        }
+
+        albums.forEach(album => {
+            const card = document.createElement("div");
+            card.className = "rec-card";
+
+            // Заглушка onerror для картинок, чтобы битые урлы ("ыва") не ломали верстку
+            card.innerHTML = `
+                <img src="${album.coverUrl || 'https://via.placeholder.com/150?text=No+Cover'}"
+                     alt="Cover"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=No+Cover';">
+                <div class="title">${album.title || "Без названия"}</div>
+                <div class="add-album-btn" title="Добавить в медиатеку">+</div>
+            `;
+
+            card.onclick = () => loadAndPlayAlbum(album, 0);
+
+            const addBtn = card.querySelector(".add-album-btn");
+            addBtn.onclick = (e) => {
+                e.stopPropagation();
+                saveAlbumToUserLibrary(album.albumId || album.id);
+            };
+
+            container.appendChild(card);
+        });
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ И ЗАГРУЗКА ДАННЫХ
+    async function initApp() {
+        const userId = localStorage.getItem("currentUserId");
+        if (!userId) return;
+
+        try {
+            // 1. Загружаем сохраненные альбомы пользователя
+            const resSaved = await fetch(`http://localhost:8080/api/users/${userId}/saved-albums`);
+            if (resSaved.ok) {
+                const savedAlbums = await resSaved.json();
+                renderSidebar(savedAlbums);
+            } else {
+                document.getElementById("sidebarAlbumsList").innerHTML = "<div style='color: #ff6b6b; font-size: 13px;'>Ошибка загрузки</div>";
+            }
+
+            // 2. ИСПРАВЛЕНО: Загружаем все рекомендации из БД динамически (без хардкода [1,2,3])
+            const resRec = await fetch(ALBUMS_API);
+            if (resRec.ok) {
+                const recAlbums = await resRec.json();
+                renderRecommendations(recAlbums);
+            } else {
+                console.error("Не удалось получить список альбомов с бэкенда");
+            }
+
+        } catch (e) {
+            console.error("Ошибка загрузки данных приложения:", e);
+        }
+    }
+
+    // СТРИМИНГ И ЗАПУСК ПЛЕЕРА
+    function loadAndPlayAlbum(album, trackIndex) {
+        if(!album.tracks || album.tracks.length === 0) {
+            alert(`В альбоме "${album.title || 'Без названия'}" нет треков.`);
+            return;
+        }
+        currentAlbumTracks = album.tracks;
+        currentTrackIndex = trackIndex;
+        currentAlbumTitle = album.title || "Без названия";
+        currentAlbumCover = album.coverUrl;
+
+        playCurrentTrack();
+    }
+
+    function playCurrentTrack() {
+        const track = currentAlbumTracks[currentTrackIndex];
+
+        document.getElementById("pTitle").innerText = track.title;
+        document.getElementById("pArtist").innerText = currentAlbumTitle;
+
+        // Подстановка заглушки плеера, если обложка пустая
+        const pCover = document.getElementById("pCover");
+        if(pCover) {
+            pCover.src = currentAlbumCover || 'https://via.placeholder.com/150?text=No+Cover';
+            pCover.onerror = function() { this.src = 'https://via.placeholder.com/150?text=No+Cover'; };
+        }
+
+        audio.src = `${TRACKS_API}/${track.trackId || track.id}/stream`;
+        audio.play();
+    }
+
+    // ИСПРАВЛЕНО: Безопасный парсинг ответа (SyntaxError больше не вылетит)
+    async function saveAlbumToUserLibrary(albumId) {
+        const userId = localStorage.getItem("currentUserId");
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/${userId}/save-album/${albumId}`, {
+                method: "POST"
+            });
+
+            if (response.ok) {
+                alert("Альбом успешно добавлен в вашу медиатеку!");
+
+                setTimeout(async () => {
+                    const resSaved = await fetch(`http://localhost:8080/api/users/${userId}/saved-albums`);
+                    if (resSaved.ok) {
+                        const savedAlbums = await resSaved.json();
+                        renderSidebar(savedAlbums);
+                    }
+                }, 300);
+
+            } else {
+                const contentType = response.headers.get("content-type");
+                // Безопасно проверяем, пришёл ли валидный JSON, чтобы не ловить Unexpected token
+                if (contentType && contentType.includes("application/json")) {
+                    const errData = await response.json();
+                    alert(`Ошибка: ${errData.error || "Не удалось сохранить альбом"}`);
+                } else {
+                    // Если бэк вернул рекурсию (валидный JSON упал) или чистый текст
+                    alert(`Альбом сохранен (или сервер ответил статусом ${response.status})`);
+
+                    // На всякий случай пробуем принудительно обновить сайдбар
+                    setTimeout(async () => {
+                        const resSaved = await fetch(`http://localhost:8080/api/users/${userId}/saved-albums`);
+                        if (resSaved.ok) renderSidebar(await resSaved.json());
+                    }, 300);
+                }
+            }
+        } catch (error) {
+            console.error("Ошибка при сохранении альбома:", error);
+            alert("Не удалось связаться с сервером.");
+        }
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // ЛОГИКА УПРАВЛЕНИЯ ПЛЕЕРОМ
+    playBtn.onclick = () => {
+        if (!audio.src) return;
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
+
+    audio.onplay = () => playBtn.innerText = "||";
+    audio.onpause = () => playBtn.innerText = "▷";
+
+    nextBtn.onclick = () => {
+        if (currentAlbumTracks.length === 0) return;
+        currentTrackIndex = (currentTrackIndex + 1) % currentAlbumTracks.length;
+        playCurrentTrack();
+    };
+
+    prevBtn.onclick = () => {
+        if (currentAlbumTracks.length === 0) return;
+        currentTrackIndex = (currentTrackIndex - 1 + currentAlbumTracks.length) % currentAlbumTracks.length;
+        playCurrentTrack();
+    };
+
+    audio.onloadedmetadata = () => {
+        timeline.max = audio.duration;
+        durationTimeText.innerText = formatTime(audio.duration);
+    };
+
+    audio.ontimeupdate = () => {
+        timeline.value = audio.currentTime;
+        currentTimeText.innerText = formatTime(audio.currentTime);
+    };
+
+    timeline.oninput = () => {
+        audio.currentTime = timeline.value;
+    };
+
+    volume.oninput = () => {
+        audio.volume = volume.value;
+    };
+
+    audio.onended = () => {
+        nextBtn.click();
+    };
+
+    audio.volume = volume.value;
+
+    window.onload = () => {
+        initApp();
+    };
+</script>
+</body>
+</html>
