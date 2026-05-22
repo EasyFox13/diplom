@@ -1,7 +1,11 @@
 package com.example.mediaservice.controller;
 
+import com.example.mediaservice.model.Artist;
 import com.example.mediaservice.model.User;
+import com.example.mediaservice.repository.UserRepository;
 import com.example.mediaservice.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -11,13 +15,11 @@ import com.example.mediaservice.repository.AlbumRepository; // если нуже
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*") // Позволяет фронтенду слать запросы без CORS-проблем
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserRepository userRepository;
 
     // Эндпоинт для регистрации
     @PostMapping("/register")
@@ -63,7 +65,18 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+        return userRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build()); // Если юзера нет в БД — вернет 404
+    }
+    // POST-запрос на адрес /api/users/{id}/become-artist
+    @PostMapping("/{userId}/become-artist")
+    public ResponseEntity<Artist> becomeArtist(@PathVariable Integer userId) {
+        Artist artistProfile = userService.makeUserAnArtist(userId);
+        return ResponseEntity.ok(artistProfile);
+    }
 
 
 }

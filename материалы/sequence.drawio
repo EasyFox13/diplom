@@ -1,0 +1,134 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="ArBucFSGzabEZxuDxRa0">
+    <mxGraphModel dx="1794" dy="873" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="MKidtwrubi4PZXqbUxVb-44" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Пользователь&#xa;(Слушатель)" vertex="1">
+          <mxGeometry height="720" width="100" x="600" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-45" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Экран сайта&#xa;(Интерфейс)" vertex="1">
+          <mxGeometry height="720" width="100" x="750" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-46" parent="MKidtwrubi4PZXqbUxVb-45" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#000000;" vertex="1">
+          <mxGeometry height="610" width="10" x="45" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-47" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Сервер&#xa;(Логика сайта)" vertex="1">
+          <mxGeometry height="720" width="110" x="900" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-48" parent="MKidtwrubi4PZXqbUxVb-47" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#000000;" vertex="1">
+          <mxGeometry height="240" width="10" x="50" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-49" parent="MKidtwrubi4PZXqbUxVb-47" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#000000;" vertex="1">
+          <mxGeometry height="150" width="10" x="50" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-50" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="База данных&#xa;(Каталог песен)" vertex="1">
+          <mxGeometry height="720" width="110" x="1080" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-51" parent="MKidtwrubi4PZXqbUxVb-50" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#000000;" vertex="1">
+          <mxGeometry height="150" width="10" x="50" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-62" edge="1" parent="MKidtwrubi4PZXqbUxVb-50" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" value="9. Считывает файл с диска">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <Array as="points">
+              <mxPoint x="-60" y="500" />
+              <mxPoint x="-50" y="500" />
+              <mxPoint x="-30" y="500" />
+            </Array>
+            <mxPoint x="-120" y="500" as="sourcePoint" />
+            <mxPoint x="235" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-52" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Хранилище файлов&#xa;(Диск с музыкой)" vertex="1">
+          <mxGeometry height="720" width="120" x="1260" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-53" parent="MKidtwrubi4PZXqbUxVb-52" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#ffffff;strokeColor=#000000;" vertex="1">
+          <mxGeometry height="70" width="10" x="55" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-54" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-44" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" target="MKidtwrubi4PZXqbUxVb-46" value="1. Пишет название в строку поиска">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="490" />
+            </Array>
+            <mxPoint x="650" y="470" as="sourcePoint" />
+            <mxPoint x="795" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-55" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-46" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" target="MKidtwrubi4PZXqbUxVb-48" value="2. Отправляет запрос: «Найти песню»">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="490" />
+            </Array>
+            <mxPoint x="805" y="490" as="sourcePoint" />
+            <mxPoint x="950" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-56" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" value="3. Ищет совпадения в каталоге">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="520" />
+            </Array>
+            <mxPoint x="960" y="520" as="sourcePoint" />
+            <mxPoint x="1130" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-57" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;strokeColor=#000000;" value="4. Возвращает список треков и альбомов">
+          <mxGeometry relative="1" x="0.1765" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1060" y="670" />
+            </Array>
+            <mxPoint x="1140" y="670" as="sourcePoint" />
+            <mxPoint x="970" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-58" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;strokeColor=#000000;" value="5. Передает найденный список сайту">
+          <mxGeometry relative="1" x="-0.0345" y="-10" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="950" y="730" as="sourcePoint" />
+            <mxPoint x="805" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-59" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-46" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;rounded=0;" target="MKidtwrubi4PZXqbUxVb-46" value="6. Показывает треки сверху, альбомы снизу">
+          <mxGeometry relative="1" x="-0.3333" y="7" as="geometry">
+            <mxPoint x="-2" y="-5" as="offset" />
+            <mxPoint x="815" y="650" as="sourcePoint" />
+            <mxPoint x="820" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-60" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-44" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" target="MKidtwrubi4PZXqbUxVb-46" value="7. Нажимает кнопку «Играть песню»">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="830" />
+            </Array>
+            <mxPoint x="650" y="830" as="sourcePoint" />
+            <mxPoint x="795" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-61" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-46" style="html=1;verticalAlign=bottom;endArrow=block;strokeColor=#000000;" target="MKidtwrubi4PZXqbUxVb-49" value="8. Запрашивает аудиофайл у сервера">
+          <mxGeometry relative="1" y="10" as="geometry">
+            <mxPoint x="805" y="860" as="sourcePoint" />
+            <mxPoint x="950" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-63" edge="1" parent="1" source="MKidtwrubi4PZXqbUxVb-53" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;strokeColor=#000000;" target="MKidtwrubi4PZXqbUxVb-49" value="10. Отдает файл небольшими частями">
+          <mxGeometry relative="1" x="-0.0141" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1020" y="970" />
+            </Array>
+            <mxPoint x="1310" y="920" as="sourcePoint" />
+            <mxPoint x="960" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MKidtwrubi4PZXqbUxVb-64" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;strokeColor=#000000;" value="11. Передает аудио в плеер (песня начинает играть)">
+          <mxGeometry relative="1" x="-0.0345" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="950.0000000000002" y="1020" as="sourcePoint" />
+            <mxPoint x="805.0000000000002" y="1020" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

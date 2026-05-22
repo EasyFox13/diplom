@@ -13,7 +13,6 @@
             --text-muted: #aaaaaa;
             --spotify-green: #1ed760;
             --accent-blue: #0076ff;
-            --accent-purple: #8a2be2;
         }
 
         body {
@@ -92,12 +91,6 @@
             transition: 0.2s;
         }
         .artist-badge-btn:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Стилизация кнопки когда юзер перешел в режим Студии */
-        .artist-badge-btn.studio-mode {
-            background-color: var(--accent-purple);
-        }
-
         .profile-icon {
             width: 36px; height: 36px; border: 2px solid var(--text-muted);
             border-radius: 50%; display: flex; align-items: center;
@@ -209,27 +202,16 @@
         .rec-card:hover .add-album-btn { opacity: 1; transform: scale(1); }
         .add-album-btn:hover { background-color: var(--text-main); color: black; }
 
-        /* Оформление форм Студии */
-        .studio-container {
-            display: flex; gap: 40px; flex-wrap: wrap; margin-top: 20px;
-        }
-        .studio-block {
-            background-color: #161616; padding: 24px; border-radius: 20px; border: 1px solid #252525; flex: 1; min-width: 320px; box-sizing: border-box;
-        }
-        .studio-block h3 { margin-top: 0; margin-bottom: 16px; color: var(--spotify-green); border-bottom: 1px solid #252525; padding-bottom: 8px; }
+        /* Форма загрузки в кабинете артиста */
         .studio-form {
-            display: flex; flex-direction: column; gap: 14px;
+            display: flex; flex-direction: column; gap: 14px; max-width: 400px; margin-top: 20px;
         }
-        .studio-form input, .studio-form select, .studio-form textarea {
-            background-color: #222; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; outline: none; font-family: inherit; font-size: 14px;
+        .studio-form input, .studio-form select {
+            background-color: #222; border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; outline: none;
         }
-        .studio-form textarea { resize: vertical; min-height: 80px; }
         .studio-form button {
-            background-color: var(--spotify-green); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            background-color: var(--spotify-green); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
-        .studio-form button:hover { opacity: 0.9; transform: translateY(-1px); }
-        .studio-form button.secondary-btn { background-color: #333; color: white; }
-        .studio-form button.secondary-btn:hover { background-color: #444; }
 
         /* 3. КАСТОМНЫЙ НИЖНИЙ ПЛЕЕР */
         .bottom-player {
@@ -333,7 +315,6 @@
                     <p id="detailsMetaLabel" style="text-transform: uppercase; letter-spacing: 1px; color: var(--spotify-green); font-weight: bold; margin-bottom: 5px;"></p>
                     <h1 id="detailsTitle">Название</h1>
                 </div>
-
             </div>
 
             <table class="tracks-table">
@@ -351,65 +332,21 @@
         </div>
 
         <div id="studioPageSection" style="display: none;">
-            <h2>Творческая Студия Музыканта</h2>
-            <p style="color: var(--text-muted); margin-bottom: 25px;">Управление вашим публичным профилем, альбомами и медиафайлами в MinIO S3.</p>
+            <h2>Студия загрузки аудиоконтента</h2>
+            <p style="color: var(--text-muted);">Вы можете загрузить собственный трек напрямую в S3 объектное хранилище MinIO.</p>
 
-            <div class="studio-container">
-
-                <div class="studio-block">
-                    <h3>Профиль исполнителя</h3>
-                    <div class="studio-form">
-                        <label style="font-size: 12px; color: var(--text-muted);">Сценический псевдоним:</label>
-                        <input type="text" id="studioArtistName" placeholder="Ваше сценическое имя">
-
-                        <label style="font-size: 12px; color: var(--text-muted);">Биография артиста:</label>
-                        <textarea id="studioArtistBio" placeholder="Расскажите слушателям о себе и своем творчестве..."></textarea>
-
-                        <label style="font-size: 12px; color: var(--text-muted);">Ссылка на обложку профиля (URL):</label>
-                        <input type="text" id="studioArtistImage" placeholder="https://example.com/avatar.jpg">
-
-                        <button onclick="saveArtistProfileData()">Сохранить изменения</button>
-                    </div>
-                </div>
-
-                <div class="studio-block">
-                    <h3>Создать новый альбом</h3>
-                    <div class="studio-form">
-                        <label style="font-size: 12px; color: var(--text-muted);">Название релиза:</label>
-                        <input type="text" id="createAlbumTitle" placeholder="Например: Сборник хитов, EP 'Волна'">
-
-                        <label style="font-size: 12px; color: var(--text-muted);">Ссылка на обложку альбома (URL):</label>
-                        <input type="text" id="createAlbumCoverUrl" placeholder="https://example.com/album-cover.jpg">
-
-                        <button class="secondary-btn" onclick="submitNewAlbumToServer()">Опубликовать альбом</button>
-                    </div>
-                </div>
-
-                <div class="studio-block" style="flex: 1.5;">
-                    <h3>Загрузить новый трек</h3>
-                    <div class="studio-form">
-                        <input type="text" id="uploadTrackTitle" placeholder="Название трека" required>
-                        <input type="number" id="uploadTrackBpm" placeholder="BPM (Скорость)" required>
-                        <input type="number" id="uploadTrackDuration" placeholder="Длительность (в секундах)" required>
-
-                        <label style="font-size: 12px; color: var(--text-muted);">Привязать к альбому:</label>
-                        <select id="uploadTrackAlbumSelect">
-                            <option value="">Выбрать альбом (Не обязательно)</option>
-                        </select>
-
-                        <label style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">Выберите аудиофайл (.mp3):</label>
-                        <input type="file" id="uploadTrackFile" accept="audio/mpeg" required>
-
-                        <button onclick="submitTrackToStorage()">Загрузить трек в MinIO S3</button>
-                    </div>
-                </div>
-
+            <div class="studio-form">
+                <input type="text" id="uploadTrackTitle" placeholder="Название трека" required>
+                <input type="number" id="uploadTrackBpm" placeholder="BPM (Скорость)" required>
+                <input type="number" id="uploadTrackDuration" placeholder="Длительность (в секундах)" required>
+                <select id="uploadTrackAlbumSelect"><option value="">Выбрать альбом (Не обязательно)</option></select>
+                <label style="font-size: 13px; color: var(--text-muted);">Выберите аудиофайл (.mp3):</label>
+                <input type="file" id="uploadTrackFile" accept="audio/mpeg" required>
+                <button onclick="submitTrackToStorage()">Загрузить трек в MinIO S3</button>
             </div>
         </div>
 
     </div>
-
-
 </main>
 
 <audio id="audioPlayer" style="display: none;"></audio>
@@ -444,6 +381,7 @@
         </div>
     </div>
 </footer>
+
 <script>
     const BASE_API = "http://localhost:8080/api";
     const safeSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><rect width='150' height='150' fill='%23333333'/></svg>";
@@ -490,8 +428,10 @@
         await checkArtistStatus();
         loadSidebarLibrary();
         loadRecommendations();
+        loadStudioAlbums();
     }
 
+    // Проверка роли пользователя
     // Проверка роли пользователя
     async function checkArtistStatus() {
         try {
@@ -502,12 +442,8 @@
                 const btn = document.getElementById("artistToggleBtn");
                 if (isUserArtist) {
                     btn.innerText = "В Студию 🎙️";
-                    btn.classList.add("studio-mode");
+                    btn.style.backgroundColor = "var(--spotify-green)"; // <--- ИСПРАВЛЕНО: добавили кавычки
                     btn.onclick = () => showStudioPage();
-                } else {
-                    btn.innerText = "Стать артистом";
-                    btn.classList.remove("studio-mode");
-                    btn.onclick = () => handleArtistRoleToggle();
                 }
             }
         } catch(e) { console.error(e); }
@@ -628,65 +564,70 @@
         triggerSearch();
     }
 
-    async function executeUnifiedSearchRequest(query, filter) {
-        const tableBody = document.getElementById("unifiedSearchTableBody");
-        tableBody.innerHTML = "<tr><td colspan='4' style='color:#777; text-align:center;'>Поиск...</td></tr>";
+   async function executeUnifiedSearchRequest(query, filter) {
+    const tableBody = document.getElementById("unifiedSearchTableBody");
+    tableBody.innerHTML = "<tr><td colspan='4' style='color:#777; text-align:center;'>Поиск...</td></tr>";
 
-        try {
-            const response = await fetch(`${BASE_API}/search?query=${encodeURIComponent(query)}&type=${filter}`);
-            if(response.ok) {
-                const items = await response.json();
-                tableBody.innerHTML = items.length ? "" : "<tr><td colspan='4' style='color:#777; text-align:center;'>Ничего не найдено</td></tr>";
+    try {
+        const response = await fetch(`${BASE_API}/search?query=${encodeURIComponent(query)}&type=${filter}`);
+        if(response.ok) {
+            const items = await response.json();
+            tableBody.innerHTML = items.length ? "" : "<tr><td colspan='4' style='color:#777; text-align:center;'>Ничего не найдено</td></tr>";
 
-                items.forEach(item => {
-                    const tr = document.createElement("tr");
-                    tr.className = "track-row";
+            items.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.className = "track-row";
 
-                    let typeBadge = "🎵";
-                    if(item.type === "ALBUM") typeBadge = "💿";
-                    if(item.type === "ARTIST") typeBadge = "👤";
-                    if(item.type === "PLAYLIST") typeBadge = "📂";
+                // Определяем иконку сущности
+                let typeBadge = "🎵";
+                if(item.type === "ALBUM") typeBadge = "💿";
+                if(item.type === "ARTIST") typeBadge = "👤";
+                if(item.type === "PLAYLIST") typeBadge = "📂";
 
-                    if (item.type === "ALBUM" || item.type === "PLAYLIST") {
-                        tr.style.height = "80px";
+                // Изменяем высоту строки в 2 раза для КРУПНЫХ сущностей (Альбомы и Плейлисты)
+                if (item.type === "ALBUM" || item.type === "PLAYLIST") {
+                    tr.style.height = "80px"; // Стандартная строка ~40px
+                }
+
+                tr.innerHTML = `
+                    <td style="text-align:center; font-size:18px; vertical-align:middle;">${typeBadge}</td>
+                    <td style="font-weight:500; vertical-align:middle;">${item.title}</td>
+                    <td style="color:var(--text-muted); vertical-align:middle;">${item.subtitle || '—'}</td>
+                    <td class="add-to-playlist-action" style="vertical-align:middle; text-align:center; font-size:16px;">
+                        ${item.type === 'TRACK' ? '＋' : '➔'}
+                    </td>
+                `;
+
+                // Обработка кликов по разным типам строк
+                tr.onclick = () => {
+                    if (item.type === 'TRACK') {
+                        playSingleTrackDirectly(item.id, item.title, item.subtitle);
+                    } else if (item.type === 'ALBUM') {
+                        loadDetailsPage('ALBUM', item.id);
+                    } else if (item.type === 'PLAYLIST') {
+                        loadDetailsPage('PLAYLIST', item.id);
+                    } else if (item.type === 'ARTIST') {
+                        loadDetailsPage('ARTIST', item.id); // Откроет карточку артиста с его треками
                     }
+                };
 
-                    tr.innerHTML = `
-                        <td style="text-align:center; font-size:18px; vertical-align:middle;">${typeBadge}</td>
-                        <td style="font-weight:500; vertical-align:middle;">${item.title}</td>
-                        <td style="color:var(--text-muted); vertical-align:middle;">${item.subtitle || '—'}</td>
-                        <td class="add-to-playlist-action" style="vertical-align:middle; text-align:center; font-size:16px;">
-                            ${item.type === 'TRACK' ? '＋' : '➔'}
-                        </td>
-                    `;
-
-                    tr.onclick = () => {
-                        if (item.type === 'TRACK') {
-                            playSingleTrackDirectly(item.id, item.title, item.subtitle);
-                        } else if (item.type === 'ALBUM') {
-                            loadDetailsPage('ALBUM', item.id);
-                        } else if (item.type === 'PLAYLIST') {
-                            loadDetailsPage('PLAYLIST', item.id);
-                        } else if (item.type === 'ARTIST') {
-                            loadDetailsPage('ARTIST', item.id);
-                        }
+                // Отдельный функционал на кнопку добавления для треков
+                if(item.type === 'TRACK') {
+                    tr.querySelector(".add-to-playlist-action").onclick = (e) => {
+                        e.stopPropagation();
+                        addTrackToPlaylistWorkflow(item.id);
                     };
+                }
 
-                    if(item.type === 'TRACK') {
-                        tr.querySelector(".add-to-playlist-action").onclick = (e) => {
-                            e.stopPropagation();
-                            addTrackToPlaylistWorkflow(item.id);
-                        };
-                    }
-                    tableBody.appendChild(tr);
-                });
-            }
-        } catch(e) {
-            tableBody.innerHTML = "<tr><td colspan='4' style='color:#ff6b6b; text-align:center;'>Ошибка сети при поиске</td></tr>";
+                tableBody.appendChild(tr);
+            });
         }
+    } catch(e) {
+        tableBody.innerHTML = "<tr><td colspan='4' style='color:#ff6b6b; text-align:center;'>Ошибка сети при поиске</td></tr>";
     }
+}
 
-    // СТРАНИЦА ДЕТАЛЬНОГО ПРОСМОТРА
+    // СТРАНИЦА ДЕТАЛЬНОГО ПРОСМОТРА (Универсальный рендеринг контекста)
     async function loadDetailsPage(type, id) {
         document.getElementById("mainPageSection").style.display = "none";
         document.getElementById("studioPageSection").style.display = "none";
@@ -707,7 +648,7 @@
 
                 label.innerText = type === 'ARTIST' ? 'Исполнитель' : (type === 'ALBUM' ? 'Альбом' : 'Плейлист');
                 titleText.innerText = data.title || data.username || data.name;
-                coverImg.src = data.coverUrl || data.imageUrl || safeSvg;
+                coverImg.src = data.coverUrl || safeSvg;
 
                 const tracks = data.tracks || [];
                 tracksContainer.innerHTML = tracks.length ? "" : "<tr><td colspan='5' style='color:#777; text-align:center;'>Здесь пока нет композиций</td></tr>";
@@ -730,8 +671,8 @@
                     tr.onclick = () => {
                         currentAlbumTracks = tracks;
                         currentTrackIndex = index;
-                        currentContextTitle = data.title || data.username || data.name || "Аудио";
-                        currentContextCover = data.coverUrl || data.imageUrl || "";
+                        currentContextTitle = data.title || data.username || "Аудио";
+                        currentContextCover = data.coverUrl || "";
                         playCurrentTrack();
                     };
 
@@ -746,7 +687,7 @@
         } catch(e) { console.error(e); }
     }
 
-    // ДОБАВЛЕНИЕ ТРЕКА В ПЛЕЙЛИСТ
+    // ДОБАВЛЕНИЕ ТРЕКА В ПЛЕЙЛИСТ В ОДИН КЛИК
     async function addTrackToPlaylistWorkflow(trackId) {
         const res = await fetch(`${BASE_API}/users/${savedId}/playlists`);
         if(!res.ok) return;
@@ -772,8 +713,8 @@
             if(data.tracks && data.tracks.length) {
                 currentAlbumTracks = data.tracks;
                 currentTrackIndex = 0;
-                currentContextTitle = data.title || data.username || data.name;
-                currentContextCover = data.coverUrl || data.imageUrl;
+                currentContextTitle = data.title || data.username;
+                currentContextCover = data.coverUrl;
                 playCurrentTrack();
             }
         }
@@ -801,6 +742,7 @@
 
     function updateActiveTrackStyles() {
         document.querySelectorAll(".track-row").forEach((row, idx) => {
+            // Подсветка активной строки
             const titleCell = row.cells[1]?.innerText;
             if (titleCell === currentAlbumTracks[currentTrackIndex]?.title) {
                 row.classList.add("playing-now");
@@ -815,108 +757,29 @@
         if(res.ok) { alert("Альбом сохранен в медиатеку"); loadSidebarLibrary(); }
     }
 
-    // ==========================================
-    // ЛОГИКА ТВОРЧЕСКОЙ СТУДИИ АРТИСТА
-    // ==========================================
-
-    async function showStudioPage() {
+    // КАБИНЕТ АРТИСТА (ЗАГРУЗКА МИН-ИО S3)
+    function showStudioPage() {
         document.getElementById("mainPageSection").style.display = "none";
         document.getElementById("detailsPageSection").style.display = "none";
         document.getElementById("studioPageSection").style.display = "block";
-        document.getElementById("navHomeBtn").style.opacity = "1";
-
-        // При входе в студию загружаем профильные данные артиста и его альбомы
-        await loadArtistProfileInputs();
-        await loadStudioAlbums();
     }
 
-    // Загрузка текущих БИО и данных артиста в инпуты формы
-    async function loadArtistProfileInputs() {
-        try {
-            const res = await fetch(`${BASE_API}/artists/profile/${savedId}`);
-            if (res.ok) {
-                const artist = await res.json();
-                document.getElementById("studioArtistName").value = artist.name || "";
-                document.getElementById("studioArtistBio").value = artist.bio || "";
-                document.getElementById("studioArtistImage").value = artist.imageUrl || "";
-            }
-        } catch(e) { console.error("Ошибка загрузки данных профиля:", e); }
-    }
-
-    // Изменение БИО и Профиля артиста (PUT)
-    async function saveArtistProfileData() {
-        const name = document.getElementById("studioArtistName").value;
-        const bio = document.getElementById("studioArtistBio").value;
-        const imageUrl = document.getElementById("studioArtistImage").value;
-
-        try {
-            const res = await fetch(`${BASE_API}/artists/profile/${savedId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, bio, imageUrl })
-            });
-            if (res.ok) {
-                alert("Данные вашего публичного профиля успешно обновлены!");
-                loadRecommendations(); // Обновляем списки на главной
-            } else {
-                alert("Не удалось сохранить изменения.");
-            }
-        } catch(e) { alert("Ошибка соединения с бэкендом."); }
-    }
-
-    // Создание Нового Альбома (POST)
-    async function submitNewAlbumToServer() {
-        const title = document.getElementById("createAlbumTitle").value;
-        const coverUrl = document.getElementById("createAlbumCoverUrl").value;
-
-        if (!title.trim()) { alert("Введите название альбома!"); return; }
-
-        try {
-            const res = await fetch(`${BASE_API}/artists/albums/${savedId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, coverUrl })
-            });
-
-            if (res.ok) {
-                alert(`Альбом "${title}" успешно опубликован на платформе!`);
-                document.getElementById("createAlbumTitle").value = "";
-                document.getElementById("createAlbumCoverUrl").value = "";
-
-                // Перезагружаем селект выбора альбомов, чтобы новый альбом там сразу появился
-                await loadStudioAlbums();
-                loadRecommendations();
-            } else {
-                alert("Ошибка при создании альбома.");
-            }
-        } catch(e) { alert("Ошибка отправки запроса."); }
-    }
-
-    // Загрузка альбомов артиста в выпадающий список (Select)
     async function loadStudioAlbums() {
         try {
-            // Загружаем профиль артиста, у него внутри лежит List<Album>
-            const res = await fetch(`${BASE_API}/artists/profile/${savedId}`);
+            const res = await fetch(`${BASE_API}/albums`);
             if(res.ok) {
-                const artist = await res.json();
+                const albums = await res.json();
                 const select = document.getElementById("uploadTrackAlbumSelect");
-
-                // Сбрасываем старые опции, оставляя только дефолтную
-                select.innerHTML = '<option value="">Выбрать альбом (Не обязательно)</option>';
-
-                if (artist.albums && artist.albums.length > 0) {
-                    artist.albums.forEach(a => {
-                        const opt = document.createElement("option");
-                        opt.value = a.albumId || a.id;
-                        opt.innerText = a.title;
-                        select.appendChild(opt);
-                    });
-                }
+                albums.forEach(a => {
+                    const opt = document.createElement("option");
+                    opt.value = a.albumId || a.id;
+                    opt.innerText = a.title;
+                    select.appendChild(opt);
+                });
             }
-        } catch(e){ console.error("Ошибка заполнения списка альбомов:", e); }
+        } catch(e){}
     }
 
-    // Загрузка аудиофайла чанками в S3 MinIO
     async function submitTrackToStorage() {
         const title = document.getElementById("uploadTrackTitle").value;
         const bpm = document.getElementById("uploadTrackBpm").value;
@@ -941,19 +804,13 @@
             });
             if(res.ok) {
                 alert("Поздравляем! Аудиофайл успешно чанками загружен в бакет объектного хранилища MinIO S3.");
-
-                // Сбрасываем форму трека
-                document.getElementById("uploadTrackTitle").value = "";
-                document.getElementById("uploadTrackBpm").value = "";
-                document.getElementById("uploadTrackDuration").value = "";
-                document.getElementById("uploadTrackFile").value = "";
-
                 showMainPage();
             } else { alert("Ошибка загрузки файла сервером."); }
         } catch(e) { alert("Ошибка подключения"); }
     }
 
     function showMainPage() {
+        // ИСПРАВЛЕНО: удалена некорректная строка .style.width = "block";
         document.getElementById("mainPageSection").style.display = "block";
         document.getElementById("detailsPageSection").style.display = "none";
         document.getElementById("studioPageSection").style.display = "none";
@@ -991,107 +848,6 @@
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
-    const API_BASE = "http://localhost:8080/api"; // проверьте ваш базовый URL
-let activePlaylistId = null; // Сюда сохраняйте ID плейлиста при его открытии
-
-// 1. Открытие / Закрытие модального окна
-document.getElementById("editPlaylistBtn").onclick = () => {
-    if (!activePlaylistId) return;
-    // Предзаполняем поля текущими данными
-    document.getElementById("editPlaylistTitleInput").value = document.getElementById("currentPlaylistTitle").innerText;
-    // Если у вас есть элемент картинки, можно взять src: document.getElementById("playlistCoverImg").src
-    document.getElementById("editPlaylistModal").style.display = "flex";
-};
-
-document.getElementById("closePlaylistModalBtn").onclick = () => {
-    document.getElementById("editPlaylistModal").style.display = "none";
-};
-
-// 2. СОХРАНЕНИЕ ИЗМЕНЕНИЙ (Название и Обложка)
-document.getElementById("savePlaylistBtn").onclick = async () => {
-    const newTitle = document.getElementById("editPlaylistTitleInput").value;
-    const newCover = document.getElementById("editPlaylistCoverInput").value;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: newTitle, coverUrl: newCover })
-        });
-
-        if (response.ok) {
-            alert("Плейлист успешно обновлен!");
-            document.getElementById("currentPlaylistTitle").innerText = newTitle;
-            // Здесь же можно обновить картинку на фронтенде, если она используется
-            document.getElementById("editPlaylistModal").style.display = "none";
-            // Опционально: вызвать функцию перезагрузки бокового меню с плейлистами
-        } else {
-            alert("Ошибка при обновлении плейлиста");
-        }
-    } catch (err) {
-        alert("Нет связи с бэкендом");
-    }
-};
-
-// 3. УДАЛЕНИЕ ВСЕГО ПЛЕЙЛИСТА
-document.getElementById("deletePlaylistBtn").onclick = async () => {
-    if (!confirm("Вы уверены, что хотите полностью удалить этот плейлист?")) return;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}`, {
-            method: "DELETE"
-        });
-
-        if (response.ok) {
-            alert("Плейлист удален");
-            document.getElementById("editPlaylistModal").style.display = "none";
-            location.reload(); // Перезагружаем страницу для обновления списков
-        } else {
-            alert("Ошибка при удалении плейлиста");
-        }
-    } catch (err) {
-        alert("Ошибка сети");
-    }
-};
-
-// 4. ОТРЕНДЕРИТЬ ТРЕК С КНОПКОЙ МИНУСА
-// Найдите вашу функцию, которая генерирует строки треков (например, renderPlaylistTracks)
-function createTrackRowHTML(track, index) {
-    return `
-        <div class="track-row" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 16px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="track-index">${index + 1}</span>
-                <span class="track-title">${track.title}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <span class="track-duration">${formatTime(track.duration)}</span>
-                <button class="remove-track-btn" onclick="removeTrackFromPlaylist(${track.trackId})" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.2rem; padding: 0 4px;">➖</button>
-            </div>
-        </div>
-    `;
-}
-
-// 5. УДАЛЕНИЕ ОТДЕЛЬНОГО ТРЕКА ИЗ ПЛЕЙЛИСТА
-window.removeTrackFromPlaylist = async (trackId) => {
-    if (!confirm("Удалить этот трек из плейлиста?")) return;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}/remove-track/${trackId}`, {
-            method: "DELETE"
-        });
-
-        if (response.ok) {
-            alert("Трек удален из плейлиста");
-            // Вызовите вашу функцию повторного рендеринга контента плейлиста, чтобы обновить список на экране
-            // например: loadPlaylistData(activePlaylistId);
-        } else {
-            alert("Не удалось удалить трек");
-        }
-    } catch (err) {
-        alert("Ошибка сети");
-    }
-};
-
 </script>
 </body>
 </html>

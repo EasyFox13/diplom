@@ -30,21 +30,21 @@ public class TrackController {
         return ResponseEntity.ok(trackService.searchTracks(query));
     }
     // ИСПРАВЛЕНО: Убрали "/upload", теперь эндпоинт слушает ровно: POST /api/tracks
-    @PostMapping
-    public ResponseEntity<Track> uploadTrack(
-            @RequestParam("title") String title,
-            @RequestParam("albumId") Integer albumId, // Изменили Integer на Long для надежности (согласно бд)
-            @RequestParam("file") MultipartFile file) {
-        try {
-            // Передаем albumId в сервис
-            // Если твой trackService принимает Integer, то либо приведи его к Long, либо оставь здесь Integer
-            Track track = trackService.createTrack(title, albumId, file);
-            return ResponseEntity.ok(track);
-        } catch (Exception e) {
-            e.printStackTrace(); // Чтобы видеть ошибку в консоли, если упадет внутри сервиса
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+//    @PostMapping
+//    public ResponseEntity<Track> uploadTrack(
+//            @RequestParam("title") String title,
+//            @RequestParam("albumId") Integer albumId, // Изменили Integer на Long для надежности (согласно бд)
+//            @RequestParam("file") MultipartFile file) {
+//        try {
+//            // Передаем albumId в сервис
+//            // Если твой trackService принимает Integer, то либо приведи его к Long, либо оставь здесь Integer
+//            Track track = trackService.createTrack(title, bpm, duration, artistId, albumId, file);
+//            return ResponseEntity.ok(track);
+//        } catch (Exception e) {
+//            e.printStackTrace(); // Чтобы видеть ошибку в консоли, если упадет внутри сервиса
+//            return ResponseEntity.internalServerError().build();
+//        }
+//    }
     @GetMapping("/{id}/stream")
     public ResponseEntity<StreamingResponseBody> streamTrack(
             @PathVariable Integer id,
@@ -53,10 +53,8 @@ public class TrackController {
             StorageService.S3ObjectWrapper s3Object = trackService.getTrackObject(id);
             InputStream inputStream = s3Object.getInputStream();
             long fileLength = s3Object.getContentLength();
-
             List<HttpRange> ranges = headers.getRange();
 
-            // Если браузер не прислал Range, отдаем весь файл, но со специальными заголовками
             if (ranges.isEmpty()) {
                 StreamingResponseBody responseBody = outputStream -> {
                     byte[] buffer = new byte[4096];
@@ -74,16 +72,11 @@ public class TrackController {
                         .contentType(MediaType.parseMediaType("audio/mpeg"))
                         .body(responseBody);
             }
-
-            // Если прилетел Range (перемотка)
             HttpRange range = ranges.get(0);
             long start = range.getRangeStart(fileLength);
             long end = range.getRangeEnd(fileLength);
             long rangeLength = end - start + 1;
-
-            // Пропускаем байты до нужного места старта перемотки
             long skipped = inputStream.skip(start);
-
             StreamingResponseBody responseBody = outputStream -> {
                 byte[] buffer = new byte[4096];
                 long bytesToRead = rangeLength;
@@ -92,24 +85,45 @@ public class TrackController {
                         int maxRead = (int) Math.min(buffer.length, bytesToRead);
                         int bytesRead = inputStream.read(buffer, 0, maxRead);
                         if (bytesRead == -1) break;
-
                         outputStream.write(buffer, 0, bytesRead);
                         bytesToRead -= bytesRead;
                     }
                 }
             };
-
             return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT) // 206
                     .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                     .header(HttpHeaders.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileLength)
                     .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(rangeLength))
                     .contentType(MediaType.parseMediaType("audio/mpeg"))
                     .body(responseBody);
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadTrack(
+            @RequestParam("title") String title,
+            @RequestParam(value = "bpm", required = false) Integer bpm,
+            @RequestParam(value = "duration", required = false) Integer duration,
+            @RequestParam("artistId") Integer artistId,
+            @RequestParam(value = "albumId", required = false) Integer albumId,
+            @RequestParam("file") MultipartFile file) {
 
+        try {
+            // Простейшая проверка на пустоту файла
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Файл не выбран или пуст");
+            }
+
+            // Передаем параметры в сервис для обработки чанков и загрузки в MinIO S3
+            trackService.createTrack(title, bpm, duration, artistId, albumId, file);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при загрузке трека на сервер: " + e.getMessage());
+        }
     }
 
 

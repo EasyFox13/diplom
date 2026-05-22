@@ -333,7 +333,6 @@
                     <p id="detailsMetaLabel" style="text-transform: uppercase; letter-spacing: 1px; color: var(--spotify-green); font-weight: bold; margin-bottom: 5px;"></p>
                     <h1 id="detailsTitle">Название</h1>
                 </div>
-
             </div>
 
             <table class="tracks-table">
@@ -408,8 +407,6 @@
         </div>
 
     </div>
-
-
 </main>
 
 <audio id="audioPlayer" style="display: none;"></audio>
@@ -991,107 +988,6 @@
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
-    const API_BASE = "http://localhost:8080/api"; // проверьте ваш базовый URL
-let activePlaylistId = null; // Сюда сохраняйте ID плейлиста при его открытии
-
-// 1. Открытие / Закрытие модального окна
-document.getElementById("editPlaylistBtn").onclick = () => {
-    if (!activePlaylistId) return;
-    // Предзаполняем поля текущими данными
-    document.getElementById("editPlaylistTitleInput").value = document.getElementById("currentPlaylistTitle").innerText;
-    // Если у вас есть элемент картинки, можно взять src: document.getElementById("playlistCoverImg").src
-    document.getElementById("editPlaylistModal").style.display = "flex";
-};
-
-document.getElementById("closePlaylistModalBtn").onclick = () => {
-    document.getElementById("editPlaylistModal").style.display = "none";
-};
-
-// 2. СОХРАНЕНИЕ ИЗМЕНЕНИЙ (Название и Обложка)
-document.getElementById("savePlaylistBtn").onclick = async () => {
-    const newTitle = document.getElementById("editPlaylistTitleInput").value;
-    const newCover = document.getElementById("editPlaylistCoverInput").value;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: newTitle, coverUrl: newCover })
-        });
-
-        if (response.ok) {
-            alert("Плейлист успешно обновлен!");
-            document.getElementById("currentPlaylistTitle").innerText = newTitle;
-            // Здесь же можно обновить картинку на фронтенде, если она используется
-            document.getElementById("editPlaylistModal").style.display = "none";
-            // Опционально: вызвать функцию перезагрузки бокового меню с плейлистами
-        } else {
-            alert("Ошибка при обновлении плейлиста");
-        }
-    } catch (err) {
-        alert("Нет связи с бэкендом");
-    }
-};
-
-// 3. УДАЛЕНИЕ ВСЕГО ПЛЕЙЛИСТА
-document.getElementById("deletePlaylistBtn").onclick = async () => {
-    if (!confirm("Вы уверены, что хотите полностью удалить этот плейлист?")) return;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}`, {
-            method: "DELETE"
-        });
-
-        if (response.ok) {
-            alert("Плейлист удален");
-            document.getElementById("editPlaylistModal").style.display = "none";
-            location.reload(); // Перезагружаем страницу для обновления списков
-        } else {
-            alert("Ошибка при удалении плейлиста");
-        }
-    } catch (err) {
-        alert("Ошибка сети");
-    }
-};
-
-// 4. ОТРЕНДЕРИТЬ ТРЕК С КНОПКОЙ МИНУСА
-// Найдите вашу функцию, которая генерирует строки треков (например, renderPlaylistTracks)
-function createTrackRowHTML(track, index) {
-    return `
-        <div class="track-row" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 16px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span class="track-index">${index + 1}</span>
-                <span class="track-title">${track.title}</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <span class="track-duration">${formatTime(track.duration)}</span>
-                <button class="remove-track-btn" onclick="removeTrackFromPlaylist(${track.trackId})" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.2rem; padding: 0 4px;">➖</button>
-            </div>
-        </div>
-    `;
-}
-
-// 5. УДАЛЕНИЕ ОТДЕЛЬНОГО ТРЕКА ИЗ ПЛЕЙЛИСТА
-window.removeTrackFromPlaylist = async (trackId) => {
-    if (!confirm("Удалить этот трек из плейлиста?")) return;
-
-    try {
-        const response = await fetch(`${API_BASE}/playlists/${activePlaylistId}/remove-track/${trackId}`, {
-            method: "DELETE"
-        });
-
-        if (response.ok) {
-            alert("Трек удален из плейлиста");
-            // Вызовите вашу функцию повторного рендеринга контента плейлиста, чтобы обновить список на экране
-            // например: loadPlaylistData(activePlaylistId);
-        } else {
-            alert("Не удалось удалить трек");
-        }
-    } catch (err) {
-        alert("Ошибка сети");
-    }
-};
-
 </script>
 </body>
 </html>

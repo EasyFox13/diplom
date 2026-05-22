@@ -1,0 +1,129 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="Q8c2Hi-W_zw9LNxygckV">
+    <mxGraphModel dx="1046" dy="883" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="6cM3wqvMtifIW84giiCL-107" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-94" parent="1" style="whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;" value="Приложение «Музыкальный стриминговый сервис»" vertex="1">
+          <mxGeometry height="60" width="360" x="250" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-109" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-95" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-94">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-95" parent="1" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;" value="Модули" vertex="1">
+          <mxGeometry height="40" width="200" x="100" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-96" parent="1" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;" value="Библиотеки" vertex="1">
+          <mxGeometry height="40" width="200" x="330" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-108" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-97" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-94">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-97" parent="1" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;align=center;" value="Файлы ресурсов" vertex="1">
+          <mxGeometry height="40" width="200" x="560" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-113" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-104" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Модуль глобального поиска и обработки медиаданных" vertex="1">
+          <mxGeometry height="50" width="180" x="120" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-115" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-105" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Spring Boot Core " vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-116" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-106" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-106" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Статические файлы интерфейса" vertex="1">
+          <mxGeometry height="50" width="180" x="580" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-135" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-117" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-104">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-117" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Параллельный асинхронный опрос API треков и альбомов" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-136" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-118" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-104">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-118" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Динамическая генерация DOM-элементов выдачи" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-137" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-119" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-119" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Модуль цифрового анализа аудио" vertex="1">
+          <mxGeometry height="50" width="180" x="120" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-141" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-119">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-120" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Извлечение метаданных, парсинг аудиосигналов" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-142" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-121" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-119">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-121" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Процедура автоматического подсчета темпа трека" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-138" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-122" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-122" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Модуль потокового вещания " vertex="1">
+          <mxGeometry height="50" width="180" x="120" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-139" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-123" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Модуль объектного хранилища" vertex="1">
+          <mxGeometry height="50" width="180" x="120" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-140" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-124" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-124" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Модуль доступа к данным" vertex="1">
+          <mxGeometry height="50" width="180" x="120" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-134" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-125" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-125" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Jackson Databind" vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-133" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-126" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-126" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value=" MinIO Java SDK" vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-132" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-127" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-127" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Project Lombok" vertex="1">
+          <mxGeometry height="50" width="180" x="350" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-131" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-128" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=none;endFill=0;align=center;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-128" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value=" Графические ресурсы" vertex="1">
+          <mxGeometry height="50" width="180" x="580" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-130" edge="1" parent="1" source="6cM3wqvMtifIW84giiCL-129" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;align=center;" target="6cM3wqvMtifIW84giiCL-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6cM3wqvMtifIW84giiCL-129" parent="1" style="whiteSpace=wrap;html=1;align=center;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Конфигурации среды" vertex="1">
+          <mxGeometry height="50" width="180" x="580" y="360" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

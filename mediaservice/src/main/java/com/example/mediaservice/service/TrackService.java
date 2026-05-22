@@ -1,10 +1,10 @@
 package com.example.mediaservice.service;
 
-import com.example.mediaservice.model.Album;
-import com.example.mediaservice.model.Track;
-import com.example.mediaservice.model.TrackFeatures;
+import com.example.mediaservice.model.*;
 import com.example.mediaservice.repository.AlbumRepository;
+import com.example.mediaservice.repository.ArtistRepository;
 import com.example.mediaservice.repository.TrackRepository;
+import com.example.mediaservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,28 +23,26 @@ public class TrackService {
 
     private final StorageService storageService;
     private final TrackRepository trackRepository;
-
+    private final ArtistService artistService;
+    private final ArtistRepository artistRepository;
+    private final UserRepository userRepository;
     private final AudioAnalysisService audioAnalysisService;
     private final AlbumRepository albumRepository; // Добавляем
 
     @Autowired
     public TrackService(TrackRepository trackRepository,
-                        StorageService storageService,
+                        StorageService storageService, ArtistService artistService, ArtistRepository artistRepository, UserRepository userRepository,
                         AudioAnalysisService audioAnalysisService,
                         AlbumRepository albumRepository) {
         this.trackRepository = trackRepository;
         this.storageService = storageService;
+        this.artistService = artistService;
+        this.artistRepository = artistRepository;
+        this.userRepository = userRepository;
         this.audioAnalysisService = audioAnalysisService;
         this.albumRepository = albumRepository;
     }
 
-//    public TrackService(StorageService storageService,
-//                        TrackRepository trackRepository,
-//                        AudioAnalysisService audioAnalysisService) {
-//        this.storageService = storageService;
-//        this.audioAnalysisService = audioAnalysisService;
-//        this.trackRepository=trackRepository;
-//    }
 
     public List<Track> searchTracks(String query) {
         // Если в репозитории ещё нет такого метода, Spring Data JPA сгенерирует его автоматически по названию
@@ -52,41 +50,42 @@ public class TrackService {
     }
 
     @Transactional
-    public Track createTrack(String title, Integer albumId, MultipartFile file) throws IOException {
-        // 1. Ищем альбом в БД. Если ID передан, но альбома нет — кидаем ошибку.
+    public Track createTrack(String title, Integer bpm, Integer duration, Integer userId, Integer albumId, MultipartFile file) throws IOException {
+
+        // 1. Ищем пользователя по его ID (который равен 1)
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Пользователь с ID " + userId + " не найден"));
+
+        // 2. Достаем связанного с ним артиста
+        Artist artist = user.getArtist();
+        if (artist == null) {
+            throw new RuntimeException("Этот пользователь не является артистом!");
+        }
+
+        // 3. Ищем альбом
         Album album = null;
         if (albumId != null) {
             album = albumRepository.findById(albumId)
                     .orElseThrow(() -> new RuntimeException("Альбом с ID " + albumId + " не найден"));
         }
 
-        // 2. Твоя текущая логика загрузки файла в MinIO
+        // ... дальше твоя неизменная логика сохранения трека
         String filePath = storageService.uploadFile(file);
-
-        // 3. Создаем объект трека
-        // ... (начало метода createTrack)
-
         Track track = new Track();
         track.setTitle(title);
         track.setFilePath(filePath);
-        track.setCreatedAt(LocalDateTime.now());
-        track.setAlbum(album); // Привязка альбома, которую мы добавили
+        track.setAlbum(album);
+        track.setArtist(artist); // Передаем корректного артиста (у которого ID = 3)
+        track.setBpm(bpm != null ? bpm : 0);
+        track.setDuration(duration != null ? duration : 0);
 
-        track.setBpm(0); // <-- ДОБАВЬ ЭТУ СТРОКУ, чтобы спасти Hibernate от null
-
-// Поля для длительности (duration) тоже можно занулить по умолчанию, если они nullable = false
-        track.setDuration(0);
-
-// Теперь сохранение пройдет гладко!
         Track savedTrack = trackRepository.save(track);
-
-// Тут сервис проанализирует файл и обновит 0 на реальный BPM
-        audioAnalysisService.analyze(file,savedTrack);
+        audioAnalysisService.analyze(file, savedTrack);
 
         return savedTrack;
     }
 
-    // Измени тип возвращаемого значения с InputStream на S3ObjectWrapper
+
     public StorageService.S3ObjectWrapper getTrackObject(Integer trackId) {
         Track track = trackRepository.findById(trackId)
                 .orElseThrow(() -> new RuntimeException("Трек не найден"));

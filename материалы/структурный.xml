@@ -1,0 +1,63 @@
+<mxGraphModel dx="1024" dy="768" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    
+    <mxCell id="main_app" value="Приложение «Музыкальный стриминговый сервис»" style="whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="240" y="40" width="360" height="60" as="geometry" />
+    </mxCell>
+    
+    <mxCell id="cat_modules" value="Модули" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="60" y="150" width="180" height="40" as="geometry" />
+    </mxCell>
+    
+    <mxCell id="cat_libs" value="Библиотеки" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="330" y="150" width="180" height="40" as="geometry" />
+    </mxCell>
+    
+    <mxCell id="cat_resources" value="Файлы ресурсов" style="whiteSpace=wrap;html=1;fontSize=13;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="590" y="150" width="180" height="40" as="geometry" />
+    </mxCell>
+    
+    <mxCell id="line_main" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;endArrow=none;startArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="420" y="100" as="sourcePoint" />
+        <mxPoint x="420" y="130" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="line_horiz" edge="1" parent="1" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=none;startArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="150" y="130" as="sourcePoint" />
+        <mxPoint x="680" y="130" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="line_to_mod" edge="1" parent="1" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="150" y="130" as="sourcePoint" />
+        <mxPoint x="150" y="150" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="line_to_libs" edge="1" parent="1" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="420" y="130" as="sourcePoint" />
+        <mxPoint x="420" y="150" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="line_to_res" edge="1" parent="1" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="680" y="130" as="sourcePoint" />
+        <mxPoint x="680" y="150" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="axis_mods" edge="1" parent="1" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=none;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="80" y="190" as="sourcePoint" />
+        <mxPoint x="80" y="680" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    
+    <mxCell id="mod_search" value="Модуль глобального поиска и обработки медиаданных" style="whiteSpace=wrap;html=1;align=left;spacingLeft=8;fontStyle=3;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" vertex="1" parent="1">
+      <mxGeometry x="100" y="210" width="190" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="sub_search_1" value="Параллельный опрос эндпоинтов треков и альбомов (Promise.all)" style="whiteSpace=wrap;html=1;align=center

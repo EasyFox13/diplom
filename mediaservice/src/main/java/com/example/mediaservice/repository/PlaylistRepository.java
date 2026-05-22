@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Integer> {
-    List<Playlist> findByCreatorUserId(Integer userId);
+    List<Playlist> findByUserUserId(Integer userId);
+    List<Playlist> findByTitleContainingIgnoreCase(String title);
 }

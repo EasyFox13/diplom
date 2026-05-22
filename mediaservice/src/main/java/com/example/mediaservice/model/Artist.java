@@ -1,5 +1,7 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,6 +18,11 @@ public class Artist {
     @Column(name = "artist_id")
     private Integer artistId;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("user-artist") // Обрежет обратный ход на User
+    private User user;
+
     @Column(nullable = false, length = 255)
     private String name;
 
@@ -27,6 +34,6 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonManagedReference("artist-album")
     private List<Album> albums;
 }

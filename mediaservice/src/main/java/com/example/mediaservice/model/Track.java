@@ -1,5 +1,6 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -17,10 +18,17 @@ public class Track {
     @Column(name = "track_id")
     private Integer trackId;
 
-    @JsonIgnoreProperties("tracks")
+    @JsonBackReference("album-track")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id")
     private Album album;
+
+    // --- ДОБАВЛЕНА СВЯЗЬ С АРТИСТОМ ---
+    @JsonIgnoreProperties({"tracks", "albums", "hibernateLazyInitializer", "handler"}) // Игнорируем список треков внутри артиста, чтобы не было зацикливания
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id", nullable = false) // Имя колонки в БД (artist_id) из твоей структуры таблицы
+    private Artist artist;
+    // ----------------------------------
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -44,9 +52,5 @@ public class Track {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-    }
-
-    public Integer getTrackId() {
-        return trackId;
     }
 }

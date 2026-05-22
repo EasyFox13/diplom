@@ -1,0 +1,82 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="JGFTFrt4OJplhNV202Qw">
+    <mxGraphModel dx="866" dy="719" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="28vzQkp37ALFtOtLHRHe-1" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=23;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;fontStyle=1;align=center;" value="Информационная система «Музыкальный стриминговый сервис»" vertex="1">
+          <mxGeometry height="660" width="460" x="410" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-2" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Аутентификация в системе" vertex="1">
+          <mxGeometry height="50" width="160" x="60" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-3" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Управление личной медиатекой" vertex="1">
+          <mxGeometry height="50" width="160" x="60" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-4" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Прослушивание аудиопотока" vertex="1">
+          <mxGeometry height="50" width="160" x="60" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-5" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Выполнение глобального поиска" vertex="1">
+          <mxGeometry height="55" width="170" x="60" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-6" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Поиск треков и вывод в&lt;br&gt;приоритетную зону (75%)" vertex="1">
+          <mxGeometry height="50" width="160" x="280" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-7" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Параллельный поиск альбомов&lt;br&gt;и отрисовка сетки выдачи" vertex="1">
+          <mxGeometry height="50" width="160" x="280" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-8" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;fontStyle=1;" value="Загрузка медиафайлов&lt;br&gt;в S3-хранилище" vertex="1">
+          <mxGeometry height="55" width="160" x="60" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-9" parent="28vzQkp37ALFtOtLHRHe-1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Автоматический цифровой&lt;br&gt;анализ сигнала и расчет BPM" vertex="1">
+          <mxGeometry height="55" width="175" x="270" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-10" edge="1" parent="28vzQkp37ALFtOtLHRHe-1" source="28vzQkp37ALFtOtLHRHe-6" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=open;endSize=12;dashed=1;" target="28vzQkp37ALFtOtLHRHe-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-11" connect="0" parent="28vzQkp37ALFtOtLHRHe-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint x="-5" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-12" edge="1" parent="28vzQkp37ALFtOtLHRHe-1" source="28vzQkp37ALFtOtLHRHe-7" style="edgeStyle=none;rounded=0;strokeColor=#000000;endArrow=open;endSize=12;dashed=1;" target="28vzQkp37ALFtOtLHRHe-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-13" connect="0" parent="28vzQkp37ALFtOtLHRHe-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint x="-5" y="-8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-14" edge="1" parent="28vzQkp37ALFtOtLHRHe-1" source="28vzQkp37ALFtOtLHRHe-8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;endArrow=open;endSize=12;dashed=1;" target="28vzQkp37ALFtOtLHRHe-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-15" connect="0" parent="28vzQkp37ALFtOtLHRHe-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#000000;labelBackgroundColor=#ffffff;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="0.3" as="geometry">
+            <mxPoint x="-20" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-16" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Пользователь" vertex="1">
+          <mxGeometry height="60" width="30" x="270" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-17" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;fontColor=#000000;" value="Администратор" vertex="1">
+          <mxGeometry height="60" width="30" x="270" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-18" edge="1" parent="1" source="28vzQkp37ALFtOtLHRHe-16" style="edgeStyle=none;strokeColor=#000000;endArrow=none;" target="28vzQkp37ALFtOtLHRHe-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-19" edge="1" parent="1" source="28vzQkp37ALFtOtLHRHe-16" style="edgeStyle=none;strokeColor=#000000;endArrow=none;" target="28vzQkp37ALFtOtLHRHe-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-20" edge="1" parent="1" source="28vzQkp37ALFtOtLHRHe-16" style="edgeStyle=none;strokeColor=#000000;endArrow=none;" target="28vzQkp37ALFtOtLHRHe-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-21" edge="1" parent="1" source="28vzQkp37ALFtOtLHRHe-16" style="edgeStyle=none;strokeColor=#000000;endArrow=none;" target="28vzQkp37ALFtOtLHRHe-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28vzQkp37ALFtOtLHRHe-22" edge="1" parent="1" source="28vzQkp37ALFtOtLHRHe-17" style="edgeStyle=none;strokeColor=#000000;endArrow=none;" target="28vzQkp37ALFtOtLHRHe-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

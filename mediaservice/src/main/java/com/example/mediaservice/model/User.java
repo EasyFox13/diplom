@@ -1,5 +1,7 @@
 package com.example.mediaservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -38,4 +41,19 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "album_id")
     )
     private List<Album> savedAlbums;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "artist_id") // или mappedBy, смотря где лежит внешний ключ
+    @JsonManagedReference("user-artist")
+    private Artist artist;
+
+    @Column(name = "is_artist", nullable = false)
+    private Boolean isArtist = false;
+    // Связь: Один пользователь может создать много плейлистов
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Playlist> playlists;
+    public Boolean isArtist(){
+        return isArtist;
+    }
+
 }
