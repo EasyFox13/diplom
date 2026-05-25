@@ -30,29 +30,23 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    // POST /api/albums - Создать новый альбом
-    @PostMapping
+      @PostMapping
     public ResponseEntity<?> createAlbum(
             @RequestParam("artistId") Integer artistId, // Ловим ?artistId= из URL
             @RequestBody Album album // Ловим JSON альбома (title, coverUrl, releaseDate)
     ) {
-        // 1. Ищем артиста в базе данных по ID
         Artist artist = artistRepository.findById(artistId).orElse(null);
         if (artist == null) {
             return ResponseEntity.badRequest().body("Ошибка: Артист с ID " + artistId + " не найден!");
         }
+     album.setArtist(artist);
 
-        // 2. Жестко связываем альбом с найденным артистом
-        album.setArtist(artist);
-
-        // 3. Сохраняем альбом в базу (теперь artist_id точно запишется)
         Album savedAlbum = albumRepository.save(album);
 
         return ResponseEntity.ok(savedAlbum);
     }
 
-    // GET /api/albums/{id} - Получить карточку альбома со списком треков
-    @GetMapping("/{id}")
+     @GetMapping("/{id}")
     public ResponseEntity<AlbumFullResponseDTO> getAlbum(@PathVariable Integer id) {
         try {
             AlbumFullResponseDTO albumInfo = albumService.getAlbumFullInfo(id);
@@ -62,7 +56,6 @@ public class AlbumController {
         }
     }
 
-    // DELETE /api/albums/{id} - Удалить альбом
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Integer id) {
         try {

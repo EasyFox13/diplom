@@ -26,7 +26,6 @@ public class ArtistService {
         this.userRepository = userRepository;
     }
 
-    // 1. Изменение БИО и имени артиста
     @Transactional
     public Artist updateProfile(Integer userId, String name, String bio, String imageUrl) {
         User user = userRepository.findById(userId)
@@ -46,7 +45,6 @@ public class ArtistService {
         return artistRepository.save(artist);
     }
 
-    // 2. Создание альбома артистом
     @Transactional
     public Album createAlbum(Integer userId, String title, String coverUrl) {
         User user = userRepository.findById(userId)
@@ -63,8 +61,7 @@ public class ArtistService {
         return albumRepository.save(album);
     }
 
-    // Получение профиля артиста для личного кабинета студии
-    public Artist getProfileByUserId(Integer userId) {
+     public Artist getProfileByUserId(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
         return artistRepository.findByUser(user)

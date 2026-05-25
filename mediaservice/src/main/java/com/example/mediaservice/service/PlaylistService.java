@@ -19,13 +19,11 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository; // Нужен для привязки плейлиста к юзеру
     private final TrackRepository trackRepository;
-    // Получить все плейлисты конкретного пользователя
     @Transactional(readOnly = true)
     public List<Playlist> getPlaylistsByUserId(Integer userId) {
         return playlistRepository.findByUserUserId(userId);
     }
 
-    // Создать новый плейлист
     @Transactional
     public Playlist createPlaylist(Integer userId, String title) {
         User user = userRepository.findById(userId)
@@ -39,7 +37,7 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    @Transactional // <-- КРИТИЧЕСКИ ВАЖНО! Без этого Hibernate не сделает коммит изменений
+    @Transactional
     public void addTrackToPlaylist(Integer playlistId, Integer trackId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден"));
@@ -47,13 +45,10 @@ public class PlaylistService {
         Track track = trackRepository.findById(trackId)
                 .orElseThrow(() -> new RuntimeException("Трек не найден"));
 
-        // Добавляем трек в коллекцию плейлиста
-        playlist.getTracks().add(track);
+       playlist.getTracks().add(track);
 
-        // На всякий случай сохраняем принудительно
         playlistRepository.save(playlist);
     }
-    // 1. Обновление названия и обложки
     @Transactional
     public Playlist updatePlaylist(Integer playlistId, String title, String coverUrl) {
         Playlist playlist = playlistRepository.findById(playlistId)
@@ -63,8 +58,7 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    // 2. Полное удаление плейлиста
-    @Transactional
+     @Transactional
     public void deletePlaylist(Integer playlistId) {
         if (!playlistRepository.existsById(playlistId)) {
             throw new RuntimeException("Плейлист не найден");
@@ -72,14 +66,12 @@ public class PlaylistService {
         playlistRepository.deleteById(playlistId);
     }
 
-    // 3. Удаление трека из плейлиста (разрыв связи в таблице playlist_tracks)
-    @Transactional
+     @Transactional
     public void removeTrackFromPlaylist(Integer playlistId, Integer trackId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден"));
 
-        // Удаляем трек из коллекции плейлиста по его ID
-        playlist.getTracks().removeIf(track -> track.getTrackId().equals(trackId));
+         playlist.getTracks().removeIf(track -> track.getTrackId().equals(trackId));
 
         playlistRepository.save(playlist);
     }

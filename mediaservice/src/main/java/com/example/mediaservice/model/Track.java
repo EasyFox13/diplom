@@ -23,12 +23,12 @@ public class Track {
     @JoinColumn(name = "album_id")
     private Album album;
 
-    // --- ДОБАВЛЕНА СВЯЗЬ С АРТИСТОМ ---
+
     @JsonIgnoreProperties({"tracks", "albums", "hibernateLazyInitializer", "handler"}) // Игнорируем список треков внутри артиста, чтобы не было зацикливания
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false) // Имя колонки в БД (artist_id) из твоей структуры таблицы
     private Artist artist;
-    // ----------------------------------
+
 
     @Column(nullable = false, length = 255)
     private String title;

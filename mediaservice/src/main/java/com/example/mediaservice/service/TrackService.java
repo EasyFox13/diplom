@@ -45,31 +45,26 @@ public class TrackService {
 
 
     public List<Track> searchTracks(String query) {
-        // Если в репозитории ещё нет такого метода, Spring Data JPA сгенерирует его автоматически по названию
         return trackRepository.findByTitleContainingIgnoreCase(query);
     }
 
     @Transactional
     public Track createTrack(String title, Integer bpm, Integer duration, Integer userId, Integer albumId, MultipartFile file) throws IOException {
 
-        // 1. Ищем пользователя по его ID (который равен 1)
-        User user = userRepository.findById(userId)
+         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Пользователь с ID " + userId + " не найден"));
 
-        // 2. Достаем связанного с ним артиста
         Artist artist = user.getArtist();
         if (artist == null) {
             throw new RuntimeException("Этот пользователь не является артистом!");
         }
 
-        // 3. Ищем альбом
-        Album album = null;
+         Album album = null;
         if (albumId != null) {
             album = albumRepository.findById(albumId)
                     .orElseThrow(() -> new RuntimeException("Альбом с ID " + albumId + " не найден"));
         }
 
-        // ... дальше твоя неизменная логика сохранения трека
         String filePath = storageService.uploadFile(file);
         Track track = new Track();
         track.setTitle(title);
@@ -96,7 +91,6 @@ public class TrackService {
         return trackRepository.findAll(pageable);
     }
 
-    // 2. Получение одного трека по ID
     public Track getTrackById(Integer id) {
         return trackRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Трек с ID " + id + " не найден"));

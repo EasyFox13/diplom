@@ -110,13 +110,11 @@ public class TrackController {
             @RequestParam("file") MultipartFile file) {
 
         try {
-            // Простейшая проверка на пустоту файла
-            if (file.isEmpty()) {
+           if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Файл не выбран или пуст");
             }
 
-            // Передаем параметры в сервис для обработки чанков и загрузки в MinIO S3
-            trackService.createTrack(title, bpm, duration, artistId, albumId, file);
+           trackService.createTrack(title, bpm, duration, artistId, albumId, file);
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

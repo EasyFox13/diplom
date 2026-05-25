@@ -56,8 +56,7 @@ public class StorageService {
     }
 
 
-    // Класс-обертка, чтобы удобно передать и поток, и размер
-    public static class S3ObjectWrapper {
+     public static class S3ObjectWrapper {
         private final InputStream inputStream;
         private final long contentLength;
 
@@ -78,7 +77,6 @@ public class StorageService {
                     .build();
 
             ResponseInputStream<GetObjectResponse> responseStream = s3Client.getObject(getObjectRequest);
-            // Достаем точный размер файла, сохраненный в MinIO
             long length = responseStream.response().contentLength();
 
             return new S3ObjectWrapper(responseStream, length);

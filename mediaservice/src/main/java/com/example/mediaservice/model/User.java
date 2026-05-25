@@ -49,8 +49,7 @@ public class User {
 
     @Column(name = "is_artist", nullable = false)
     private Boolean isArtist = false;
-    // Связь: Один пользователь может создать много плейлистов
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Playlist> playlists;
     public Boolean isArtist(){
         return isArtist;

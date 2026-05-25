@@ -32,8 +32,7 @@ public class Playlist {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    // Связь Many-to-Many с треками через таблицу playlist_tracks
-    @ManyToMany
+   @ManyToMany
     @JoinTable(
             name = "playlist_tracks",
             joinColumns = @JoinColumn(name = "playlist_id"),
@@ -45,7 +44,6 @@ public class Playlist {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-    // Внутри класса Playlist.java
-    @Column(name = "cover_url", length = 500)
+     @Column(name = "cover_url", length = 500)
     private String coverUrl;
 }
